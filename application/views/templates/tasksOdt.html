@@ -1,0 +1,57 @@
+<div style="height:500px;">
+<div class="col-md-3">
+    <select ng-model="sel" size="5" style="width:100%; height:100%;">
+        <option disabled value="0" style="background-color: rgb(200,200,200);">FolderName</option>
+        <option ng-repeat="list in tasklists" value="{{list.ID}}" >{{list.folderName}}</option>
+    </select>
+</div>
+<div class="col-md-9" style="height:100%; padding:0;" ng-if="sel!='a'">
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <h3 style="padding:0px 10px;">{{tasklists[sel-1].folderName}}</h3>
+            </div>
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav">
+                    <li><a href="#/Tasks/General?id={{sel}}">Infos</a></li>
+                    <li><a href="#/Tasks/Html?id={{sel}}">Html Version</a></li>
+                    <li><a href="#/Tasks/Odt?id={{sel}}" style="background-color: #ddd;">Odt Version</a></li>
+                    <li><a href="#/Tasks/PDF?id={{sel}}">PDF Version</a></li>
+                    <li><a href="#/Tasks/Your?id={{sel}}">Your Review</a></li>
+                    <li><a href="#/Tasks/All?id={{sel}}">All Reviews</a></li>
+                    <li><a href="#/Tasks/Discussion?id={{sel}}">Discussion</a></li>
+                    <li><a href="#/Tasks">&#10006;</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div style="border:1px solid; padding:10px; height:74%" >
+    <table class="table table-bordered pagin-table">
+        <thead>
+            <tr>
+                <th> folderName </th>
+                <th> year </th>
+                <th> countryCode </th>
+                <th> svnLogin </th>
+                <th> repositoryDate </th>
+                <th> importDate </th>
+                <th> Group </th>
+                <th> status </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="x in data"  ng-show="x['ID']==sel" >
+                <td> {{x.folderName}} </td>
+                <td> {{x.year}} </td>
+                <td> {{x.countryCode}} </td>
+                <td> {{x.svnLogin}} </td>
+                <td> {{x.repositoryDate}} </td>
+                <td> {{x.importDate}} </td>
+                <td> {{x.Group}} </td>
+                <td> {{x.status}} </td>
+            </tr>
+        </tbody>
+    </table>
+    </div>
+</div>
+</div>
