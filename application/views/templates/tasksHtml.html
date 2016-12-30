@@ -31,7 +31,7 @@
                 <toggle-switch ng-model="toggleflag" ng-style="{'background-color':((toggleflag==true)?'#5cb85c':'#f0f0f0')}" on-label="" off-label="" style="margin-bottom:-10px;"></toggle-switch>
             </div>
             <div ng-repeat="x in data"  ng-show="x['ID']==sel&&toggleflag==true" >
-                <a ng-href="/bebras-review/SVN/{{x.folderName}}/{{x.htmlFilename}}-eng.html" target="_blank" class="pull-right" style="padding-right:20px;">Open the server version of this task in a new browser tab</a><br/>
+                <a ng-href="{{x.link}}" target="_blank" class="pull-right" style="padding-right:20px;">Open the server version of this task in a new browser tab</a><br/>
                 <div style="width:100%;">
                     <iframe ng-src="{{x.link}}" style="width:100%; height:87%; margin-top:10px; border:1px solid black;" ng-show='(data.autoLoadTasks=="true"||flag)'></iframe>
                     <div ng-show='(data.autoLoadTasks=="false")'>
@@ -55,7 +55,7 @@
                     </button>
                 </div>
                 <div style="width:100%;" ng-show="httpflag">
-                    <iframe ng-src="{{x.otherlink}}" style="width:100%; height:87%; margin-top:10px; border:1px solid black;"></iframe>
+                    <iframe ng-src="{{trust(x.otherlink)}}" style="width:100%; height:87%; margin-top:10px; border:1px solid black;"></iframe>
                 </div>
             </div>
         </div>

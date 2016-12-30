@@ -1,4 +1,4 @@
-app.controller('HtmlController', ['$scope', '$location', 'HtmlServices', 'TasklistServices', function($scope, $location, HtmlServices, TasklistServices){
+app.controller('HtmlController', ['$scope','$sce', '$location', 'HtmlServices', 'TasklistServices', function($scope,$sce, $location, HtmlServices, TasklistServices){
   $scope.action=function(){
     HtmlServices.action(function(response){
       $scope.show(response.data);
@@ -36,5 +36,10 @@ app.controller('HtmlController', ['$scope', '$location', 'HtmlServices', 'Taskli
   $scope.action();
   $scope.flag=0;
   $scope.toggleflag=true;
+
+  $scope.trust = function(url)
+  {
+    return $sce.trustAsResourceUrl(url);
+  }
   
 }]);
