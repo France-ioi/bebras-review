@@ -1,4 +1,4 @@
-app.controller('OdtController', ['$scope', '$location', 'OdtServices', 'TasklistServices', function($scope, $location, OdtServices, TasklistServices){
+app.controller('OdtController', ['$scope','$sce', '$location', 'OdtServices', 'TasklistServices', function($scope,$sce, $location, OdtServices, TasklistServices){
   $scope.action=function(){
     OdtServices.action(function(response){
       $scope.show(response.data);
@@ -16,6 +16,8 @@ app.controller('OdtController', ['$scope', '$location', 'OdtServices', 'Tasklist
 
   $scope.tasklists="List";
   $scope.data="loading";
+
+  $scope.httpflag="false";
   $scope.show = function(data)
   {
     $scope.data=data;
@@ -24,6 +26,7 @@ app.controller('OdtController', ['$scope', '$location', 'OdtServices', 'Tasklist
       $scope.sel='0';
     else
       $scope.sel=searchObject['id'];
+    $scope.httpflag=($scope.data.localCheckoutFolder.substring(0,4)=='http');
   }
   $scope.list = function(data)
   {
@@ -31,4 +34,12 @@ app.controller('OdtController', ['$scope', '$location', 'OdtServices', 'Tasklist
   }
   $scope.tasklist();
   $scope.action();
+  $scope.flag=0;
+  $scope.toggleflag=true;
+
+  $scope.trust = function(url)
+  {
+    return $sce.trustAsResourceUrl(url);
+  }
+  
 }]);

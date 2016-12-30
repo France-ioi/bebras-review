@@ -296,5 +296,43 @@ class presentation_model extends CI_Model {
 		
 		return $result;
 	}
+
+	public function getpdf()
+	{
+		$tasks = $this->db->get('tasks');
+		$result = $tasks->result_array();
+		$username = ($this->session->userdata['logged_in']['username']);
+		$users = $this->db->get_where('users',array('firstName'=>$username))->result_array();
+		$result['autoLoadTasks']=$users[0]['autoLoadTasks'];
+		$result['localCheckoutFolder']=$users[0]['localCheckoutFolder'];
+		for($i=0;$i<$tasks->num_rows();$i++)
+		{
+			$result[$i]['link']="/bebras-review/SVN/".$result[$i]['folderName']."/".$result[$i]['pdfFileName']."-eng.html";
+			$result[$i]['otherlink']=$users[0]['localCheckoutFolder']."/".$result[$i]['folderName']."/".$result[$i]['pdfFileName']."-eng.html";
+			if(substr($users[0]['localCheckoutFolder'],0,4)!="http")
+				$result[$i]['otherlink']="";
+		}
+		
+		return $result;
+	}
+
+	public function getodt()
+	{
+		$tasks = $this->db->get('tasks');
+		$result = $tasks->result_array();
+		$username = ($this->session->userdata['logged_in']['username']);
+		$users = $this->db->get_where('users',array('firstName'=>$username))->result_array();
+		$result['autoLoadTasks']=$users[0]['autoLoadTasks'];
+		$result['localCheckoutFolder']=$users[0]['localCheckoutFolder'];
+		for($i=0;$i<$tasks->num_rows();$i++)
+		{
+			$result[$i]['link']="/bebras-review/SVN/".$result[$i]['folderName']."/".$result[$i]['odtFileName']."-eng.html";
+			$result[$i]['otherlink']=$users[0]['localCheckoutFolder']."/".$result[$i]['folderName']."/".$result[$i]['odtFileName']."-eng.html";
+			if(substr($users[0]['localCheckoutFolder'],0,4)!="http")
+				$result[$i]['otherlink']="";
+		}
+		
+		return $result;
+	}
 	
 }

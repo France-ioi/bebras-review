@@ -1,6 +1,6 @@
 var app =  angular.module('main-App',['ngRoute','ngSanitize', 'toggle-switch']);
 
-var baseurl="http://localhost/bebras-review/";
+var baseurl="http://1f2b33d4.ngrok.io/bebras-review/";
 app.config(['$routeProvider',
     function($routeProvider) {
         $routeProvider.
