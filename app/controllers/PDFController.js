@@ -18,6 +18,7 @@ app.controller('PDFController', ['$scope','$sce', '$location', 'PDFServices', 'T
   $scope.data="loading";
 
   $scope.httpflag="false";
+  $scope.sel='0';
   $scope.show = function(data)
   {
     $scope.data=data;
@@ -32,14 +33,23 @@ app.controller('PDFController', ['$scope','$sce', '$location', 'PDFServices', 'T
   {
     $scope.tasklists=data;
   }
-  $scope.tasklist();
   $scope.action();
+  $scope.tasklist();
+  
   $scope.flag=0;
-  $scope.toggleflag=true;
+  $scope.toggleflag=false;
 
   $scope.trust = function(url)
   {
     return $sce.trustAsResourceUrl(url);
+  }
+
+
+  $scope.loadchange = function(){
+    $scope.data.autoLoadTasks='true';
+    HtmlServices.autosave(function(response){
+    }, function(response){
+    });
   }
   
 }]);

@@ -35,8 +35,11 @@ app.controller('DiscussionController', ['$scope', '$location' , 'DiscussionServi
   $scope.messagesend = function()
   {
     DiscussionServices.sendmess($scope.sel, $scope.mess,function(response){
-      $scope.action();
       $scope.mess="";
+        DiscussionServices.action(function(response){
+          $scope.data=response.data;
+        }, function(response){
+        });
     }, function(response){
     });
   }

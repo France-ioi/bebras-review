@@ -31,8 +31,10 @@ header("location: login");
 	<script src="<?php echo base_url(); ?>assets/angular-toggle-switch.js"></script>
 
 	<!-- MY App -->
-	<script src="<?php echo base_url(); ?>app/packages/dirPagination.js"></script>
 	<script src="<?php echo base_url(); ?>app/routes.js"></script>
+	<script src="<?php echo base_url(); ?>app/packages/dirPagination.js"></script>
+	<script src="<?php echo base_url(); ?>app/packages/directive.js"></script>
+	
 
 	<script src="<?php echo base_url(); ?>app/services/PresentationServices.js"></script>
 	<script src="<?php echo base_url(); ?>app/services/TasksServices.js"></script>
@@ -70,6 +72,27 @@ header("location: login");
 		.navbar-default .navbar-nav>li>a:hover, .navbar-default .navbar-nav>li>a:focus
 		{
 		  background-color:#ddd;
+		}
+
+		.rating {
+		    color: #a9a9a9;
+		    margin: 0;
+		    padding: 0;
+		}
+		ul.rating {
+		    display: inline-block;
+		}
+		.rating li {
+		    list-style-type: none;
+		    display: inline-block;
+		    padding: 1px;
+		    text-align: center;
+		    font-weight: bold;
+		    cursor: pointer;
+		    font-size:15px;
+		}
+		.rating .filled {
+		    color: orangered;
 		}
 
 	</style>

@@ -63,6 +63,7 @@ app.controller('ReviewsController', ['$scope',  'ReviewsServices', function($sco
 
     $scope.myOrderBy="author";
   }
+
 //myOrderBy au ye co gr
   $scope.action();
 }]);

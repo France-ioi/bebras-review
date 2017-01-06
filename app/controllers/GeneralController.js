@@ -43,20 +43,21 @@ app.controller('GeneralController', ['$scope', '$location', 'GeneralServices', '
     if($scope.sel=='0'&&searchObject['id']!=null)
       $scope.sel=searchObject['id'];
       
-    var year=$scope.real[$scope.sel-1].folderName.substring(0,4);
+    var year=$scope.sel.substring(0,4);
     $scope.check=$scope.check&&!isNaN(year);
-    var symbol=$scope.real[$scope.sel-1].folderName.substring(4,5);
-    $scope.check=$scope.check&&(symbol=='_');
-    var countrycode=$scope.real[$scope.sel-1].folderName.substring(5,7);
+    var symbol=$scope.sel.substring(4,5);
+    $scope.check=$scope.check&&(symbol=='-');
+    var countrycode=$scope.sel.substring(5,7);
     $scope.check=$scope.check&&(isNaN(countrycode));
-    symbol=$scope.real[$scope.sel-1].folderName.substring(7,8);
-    $scope.check=$scope.check&&(symbol=='_');
-    var number=$scope.real[$scope.sel-1].folderName.substring(8,10);
+    symbol=$scope.sel.substring(7,8);
+    $scope.check=$scope.check&&(symbol=='-');
+    var number=$scope.sel.substring(8,10);
     $scope.check=$scope.check&&(!isNaN(number));
   }
 
-  $scope.lastsave = function() {
-    GeneralServices.lastsave($scope.real[$scope.sel-1], function(response){
+  $scope.lastsave = function(data) {
+    alert("click"+JSON.stringify(data));
+    GeneralServices.lastsave(data, function(response){
       alert("controller"+JSON.stringify(response.data));
       $scope.show(response.data);
     },function(response){

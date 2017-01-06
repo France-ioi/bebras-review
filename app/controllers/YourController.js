@@ -17,6 +17,7 @@ app.controller('YourController', ['$scope', '$location', 'YourServices', 'Taskli
 
   $scope.data="loading";
   $scope.tasklists="List";
+  $scope.sel='0';
   $scope.show = function(data)
   {
     $scope.data=data;
@@ -31,15 +32,14 @@ app.controller('YourController', ['$scope', '$location', 'YourServices', 'Taskli
     $scope.tasklists=data;
   }
 
-  $scope.chg = function(id, comment)
+  $scope.chg = function(id,a,b ,comment)
   {
-    YourServices.reviewchange(id, comment, function(response){
-      $scope.show(response.data);
+    YourServices.reviewchange(id, a,b,comment, function(response){
     }, function(response){
-      $scope.show("Failed");
     });
   }
-
   $scope.tasklist();
   $scope.action();
+  
+  
 }]);

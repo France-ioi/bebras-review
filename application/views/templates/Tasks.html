@@ -92,7 +92,7 @@
         </tr>
     </thead>
     <tbody>
-        <tr ng-repeat="x in data" ng-show="(ye=='0'||x.year==ye)&&(co=='0'||x.countryCode==co)&&(ow=='0'||x.ownerID==ow)&&(gr=='0'||x.Group==gr)&&(st=='0'||x.status==st)&&(re=='0'||x.Reviews==re)" ng-click="go(x.ID)">
+        <tr ng-repeat="x in data | orderBy : myOrderBy" ng-show="(ye=='0'||x.year==ye)&&(co=='0'||x.countryCode==co)&&(ow=='0'||x.ownerID==ow)&&(gr=='0'||x.Group==gr)&&(st=='0'||x.status==st)&&(re=='0'||x.Reviews==re)" ng-click="go(x.folderName)">
             <td> {{x.folderName}} </td>
             <td> {{x.year}} </td>
             <td> {{x.countryCode}} </td>
@@ -107,3 +107,4 @@
         </tr>
     </tbody>
 </table>
+<button ng-click="svnbutton()">SVN Update</button>

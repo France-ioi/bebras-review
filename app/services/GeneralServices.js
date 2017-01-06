@@ -12,7 +12,6 @@ app.factory('GeneralServices', function($http) {
   }
 
   function lastsave(data,onSuccess,onError){
-    alert("sending"+data);
     var dat = $.param({
                 data
             });
@@ -21,9 +20,9 @@ app.factory('GeneralServices', function($http) {
           'Content-Type': 'application/x-www-form-urlencoded;'
         }
     };
+    alert("sevice"+JSON.stringify(data));
     $http.post(baseurl+'templates/lastsave',dat,config)
     .then(function(response) {
-       alert("service"+JSON.stringify(response.data));
       onSuccess(response);
     }, function(response) {
       onError(response);

@@ -11,7 +11,17 @@ app.factory('HtmlServices', function($http) {
     });
   }
 
+  function autosave(onSuccess, onError){
+    $http.post(baseurl+'templates/autosave')
+    .then(function(response) {
+      onSuccess(response);
+    }, function(response) {
+      onError(response);
+    });
+  }
+
   return {
-    action: action
+    action: action,
+    autosave:autosave
   }
 });

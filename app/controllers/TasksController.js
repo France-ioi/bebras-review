@@ -7,6 +7,7 @@ app.controller('TasksController', ['$scope', '$location',  'TasksServices', func
     });
   }
   $scope.data="loading";
+  $scope.flag=0;
 
   $scope.yearlist=new Array();
   $scope.ye="0";
@@ -88,6 +89,13 @@ app.controller('TasksController', ['$scope', '$location',  'TasksServices', func
   }
   $scope.go=function(tag){
      $location.url("/Tasks/General?id="+tag);
+  }
+
+  $scope.svnbutton=function()
+  {
+    TasksServices.updatesvn(function(response){
+    }, function(response){
+    });
   }
 
   $scope.action();

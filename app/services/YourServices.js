@@ -11,9 +11,9 @@ app.factory('YourServices', function($http) {
     });
   }
 
-  function reviewchange(id, comment, onSuccess, onError){
+  function reviewchange(id, a,b,comment, onSuccess, onError){
      var dat = $.param({
-                id, comment
+                id, a,b,comment
             });
     var config = {
         headers:{

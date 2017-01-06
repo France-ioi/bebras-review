@@ -49,25 +49,11 @@
                 <label style="width:80px">{{x.initialReviewDate}} </label><br/>
                 <label style="width:90px">Last change:</label>
                 <label style="width:80px">{{x.lastChangeReviewDate}}</label> <br/>
-                <label style="width:90px">As of now:</label>
-                <label style="width:80px"> {{x.currentRating}}</label> 
-               <!-- <span ng-class="'starRating'+x.ID" class="starRating">
-                    <input id="rating6" type="radio" name="rating" value="6">
-                    <label for="rating6">6</label>
-                    <input id="rating5" type="radio" name="rating" value="5">
-                    <label for="rating5">5</label>
-                    <input id="rating4" type="radio" name="rating" value="4">
-                    <label for="rating4">4</label>
-                    <input id="rating3" type="radio" name="rating" value="3" checked>
-                    <label for="rating3">3</label>
-                    <input id="rating2" type="radio" name="rating" value="2">
-                    <label for="rating2">2</label>
-                    <input id="rating1" type="radio" name="rating" value="1">
-                    <label for="rating1">1</label>
-                </span>-->
+                <label style="width:80px">As of now:</label>
+                <div star-rating rating-value="x.currentRating" style="float:right; line-height: 1.2;"></div>
                 <br/>
-                <label style="width:90px">Potential:</label>
-                <label style="width:80px"> {{x.potentialRating}}</label> 
+                <label style="width:80px">Potential:</label>
+                <div star-rating rating-value="x.potentialRating" style="float:right; line-height: 1.2;"></div>
             </div>
             <div class="col-md-9">
                 <textarea readonly style="width:100%; height:100%; border:0;  outline:0;">{{x.comment}}</textarea>

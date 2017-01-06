@@ -21,7 +21,6 @@ app.controller('AllController', ['$scope', '$location', 'AllServices', 'Tasklist
   $scope.show = function(data)
   {
     $scope.data=data;
-    $scope.real=data;
     var searchObject = $location.search();
     if(searchObject['id']==null)
       $scope.sel='0';

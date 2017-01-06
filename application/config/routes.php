@@ -74,4 +74,5 @@ $route['templates/discussionchange'] = "templates/discussionchange";
 $route['templates/reviewchange'] = "templates/reviewchange";
 $route['templates/group'] = "templates/group";
 $route['templates/lastsave'] = "templates/lastsave";
-
+$route['templates/autosave'] = "templates/autosave";
+$route['templates/updatesvn'] = "templates/updatesvn";

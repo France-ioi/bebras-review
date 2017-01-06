@@ -11,7 +11,20 @@ app.factory('TasksServices', function($http) {
     });
   }
 
+  function updatesvn(onSuccess, onError){
+    $http.post(baseurl+'templates/updatesvn',
+    {
+      data:'action'
+    }).
+    then(function(response) {
+      onSuccess(response);
+    }, function(response) {
+      onError(response);
+    });
+  }
+
   return {
-    action: action
+    action: action,
+    updatesvn: updatesvn
   }
 });

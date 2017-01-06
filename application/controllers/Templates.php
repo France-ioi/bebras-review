@@ -148,4 +148,15 @@ class Templates extends CI_Controller {
 		$data = $this->presentation_model->lastsave();
 		echo json_encode($data);
 	}
+
+	public function autosave()
+	{
+		$data = $this->presentation_model->autosave();
+		echo json_encode($data);
+	}
+	public function updatesvn()
+	{
+		$data = $this->presentation_model->updatesvn();
+		echo json_encode($data);
+	}
 }
