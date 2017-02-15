@@ -453,16 +453,12 @@ class presentation_model extends CI_Model {
 	}
 	
 	public function updatesvn()
-	{
-		
-		//svn_log('svn://svn.france-ioi.org/beaver_review_sample');
+	{		
 		ini_set('max_execution_time', 3600);
-
 		
 		$repository = "svn://svn.france-ioi.org/beaver_review_sample/2015/";
 		$result=$this->svnlist($repository);
 		return count($result);
-		//return "OK";
 	}
 }
 
