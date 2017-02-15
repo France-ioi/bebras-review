@@ -1,6 +1,7 @@
 var app =  angular.module('main-App',['ngRoute','ngSanitize', 'toggle-switch']);
 
-var baseurl="http://localhost/bebras-review/";
+var baseurl="http://127.0.0.1:8000/bebras-review/";
+
 app.config(['$routeProvider',
     function($routeProvider) {
         $routeProvider.
