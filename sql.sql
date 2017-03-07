@@ -106,7 +106,7 @@ CREATE TABLE `tasktest` (
 DROP TABLE IF EXISTS `users`;
 CREATE TABLE `users` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
-  `login` text NOT NULL,
+  `username` text NOT NULL,
   `svnLogin` text NOT NULL,
   `firstName` text NOT NULL,
   `lastName` text NOT NULL,

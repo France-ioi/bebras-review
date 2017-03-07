@@ -1,7 +1,7 @@
 <html>
 <?php
 	if (isset($this->session->userdata['logged_in'])) {
-	header("location:". base_url()."index.php/user_auth/user_login_process");
+	header("location:". base_url()."user_auth/user_login_process");
 }
 ?>
 <head>
