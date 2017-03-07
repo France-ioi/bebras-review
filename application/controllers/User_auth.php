@@ -80,7 +80,7 @@ public function user_login_process() {
 	);
     error_log(md5($this->input->post('password')));
 	$result = $this->login_database->login($data);
-	if ($result == TRUE) {
+	if ($result == 'ok') {
 		$username = $this->input->post('username');
 		$result = $this->login_database->read_user_information($username);
 		if ($result != 	false) {
@@ -93,14 +93,18 @@ public function user_login_process() {
 			$this->session->set_userdata('logged_in', $session_data);
 			$this->load->view('welcome_message');
 		}
-	} 
-	else {
+	} elseif ($result == 'invalid') {
 		$data = array(
-			'error_message' => 'Invalid Username or Password'
+			'error_message' => 'Invalid username or password'
 		);
 		$this->load->view('login_form', $data);
-		}
+	} elseif ($result == 'unconfirmed') {
+		$data = array(
+			'error_message' => 'User has not been confirmed by an admin yet'
+		);
+		$this->load->view('login_form', $data);
 	}
+    }
 }
 
 // Logout from admin page

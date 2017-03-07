@@ -38,7 +38,9 @@ class presentation_model extends CI_Model {
             $result[$i]['reviewers'] = Array();
 			for($j=0;$j<$review->num_rows();$j++)
 			{
-                $result[$i]['reviewers'][$reviewresult[$j]['userID']] = $userID_to_name[$reviewresult[$j]['userID']];
+                if($reviewresult[$j]['isAssigned'] == 1) {
+                    $result[$i]['reviewers'][$reviewresult[$j]['userID']] = $userID_to_name[$reviewresult[$j]['userID']];
+                }
 				$sum1+=$reviewresult[$j]['currentRating'];
 				$sum2+=$reviewresult[$j]['potentialRating'];
 			}

@@ -46,10 +46,13 @@ Class Login_Database extends CI_Model {
 		$query = $this->db->get();
 
 		if ($query->num_rows() == 1) {
-			return true;
-		}
-		else {
-			return false;
+            if($query->result_array()[0]['role'] == 'Unconfirmed') {
+                return 'unconfirmed';
+            } else {
+    			return 'ok';
+            }
+		} else {
+			return 'invalid';
 		}
 	}
 
