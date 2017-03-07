@@ -298,12 +298,13 @@ class presentation_model extends CI_Model {
 		$sum2=0;
 		for($i=0;$i<$count;$i++)
 		{	
+			$tasks = $this->db->get_where('tasks',array('ID'=>$result[$i]['taskID']))->result_array();
+			$result[$i]['folderName']=$tasks[0]['folderName'];
 			$user = $this->db->get_where('users',array('ID'=>$result[$i]['userID']))->result_array();
 			$result[$i]['author']=$user[0]['firstName'] . ' ' . $user[0]['lastName'];
 			$result[$i]['flag']=($user[0]['username']==$username);
-			$result[$i]['flag1']=($user[0]['username']==$username||$f);
-			$tasks = $this->db->get_where('tasks',array('ID'=>$result[$i]['taskID']))->result_array();
-			$result[$i]['folderName']=$tasks[0]['folderName'];
+			$result[$i]['flagModify']=($user[0]['username']==$username||$f);
+			$result[$i]['flagAuthor']=($result[$i]['userID']==$tasks[0]['ownerID']);
 		}
 		
 		return $result;
