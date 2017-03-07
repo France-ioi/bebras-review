@@ -1,4 +1,4 @@
-<div style="height:500px;">
+<div style="height:3000px;">
 <div class="col-md-3">
     <select ng-model="sel" size="5" style="width:100%; height:100%;">
         <option disabled value="0" style="background-color: rgb(200,200,200);">FolderName</option>
@@ -27,11 +27,13 @@
     </nav>
     <div style="border:1px solid; padding:10px; height:74%; margin:0; overflow-y: scroll;"  class="row">
         <div ng-repeat="x in data" ng-show="x['folderName']==sel"  class="row"  style="margin:0;">
-            <div style="border-radius: 20px; width:85%; margin:5px; padding:10px; height:35%; " class="row" ng-style="{'float':((x['flagAuthor']==true)?'right':'left'), 'border': (x['flag']? '5px solid' : '1px solid')}">
+            <div style="border-radius: 20px; width:85%; margin:5px; padding:10px; height:140px; " class="row" ng-style="{'float':((x['flagAuthor']==true)?'right':'left'), 'border': (x['flag']? '5px solid' : '1px solid')}">
                 <div class="col-md-2" style="text-align: center;">
                     <span> {{x.author}} </span>
                     <br/>
                     <span> {{x.dateModified}} </span>
+                    <span ng-if="x['flag']" class="label label-default">You</span>
+                    <span ng-if="x['flagAuthor']" class="label label-success">Author</span>
                     <button ng-click="changemess(x.ID,x.content)" ng-show="((x['flagModify']==true)?true:false)" class="btn btn-info btn-xs" style="margin:10px;">Save</button>
                 </div>
                 <div class="col-md-10">
@@ -40,12 +42,12 @@
             </div>
         </div>
         <div class="row" style="margin:0;">
-            <div style="border-radius: 20px; border:1px solid; width:85%;  float:left; margin:5px; padding:10px; height:25%;">
+            <div style="border-radius: 20px; border:1px solid; width:85%;  float:left; margin:5px; padding:10px; height: 140px;">
                 <div class="col-md-2" style="padding:0;" align="center">
                     <span> Your message: </span>
                     <br/>
                     <br/>
-                    <button ng-click="messagesend()">Send</button>
+                    <button class="btn btn-primary btn-xs" ng-click="messagesend()">Send</button>
                 </div>
                 <div class="col-md-10">
                     <textarea style="width:100%; padding:10px; height:100%;" ng-model="$parent.mess"></textarea>
