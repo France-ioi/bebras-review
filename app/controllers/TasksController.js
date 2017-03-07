@@ -19,6 +19,7 @@ app.controller('TasksController', ['$scope', '$location',  'TasksServices', func
   $scope.gr="0";
   $scope.statuslist=new Array();
   $scope.st="0";
+  $scope.reviewerIDlist=new Array();
   $scope.reviewerlist=new Array();
   $scope.re="0";
 
@@ -28,6 +29,7 @@ app.controller('TasksController', ['$scope', '$location',  'TasksServices', func
     var i,j;
     var length=0;
 
+    // TODO :: better logic to make the lists...
     for(i=0;i<$scope.data.length;i++)
     {
       for(j=0;j<i;j++)
@@ -51,10 +53,11 @@ app.controller('TasksController', ['$scope', '$location',  'TasksServices', func
     for(i=0;i<$scope.data.length;i++)
     {
       for(j=0;j<i;j++)
-        if(data[i].ownerID==data[j].ownerID)
+        if(data[i].ownerName==data[j].ownerName)
           break;
       if(i==j)
-        $scope.ownerlist[length++]=data[i].ownerID;
+        $scope.ownerlist[length++]=data[i].ownerName;
+      // TODO :: use IDs for filtering, name for display
     }
 
     length=0;
@@ -80,11 +83,12 @@ app.controller('TasksController', ['$scope', '$location',  'TasksServices', func
     length=0;
     for(i=0;i<$scope.data.length;i++)
     {
-      for(j=0;j<i;j++)
-        if(data[i].Reviews==data[j].Reviews)
-          break;
-      if(i==j)
-        $scope.reviewerlist[length++]=data[i].Reviews;
+      for(var revID in data[i].reviewers) {
+        if($scope.reviewerIDlist.indexOf(revID) < 0) {
+          $scope.reviewerIDlist.push(revID);
+          $scope.reviewerlist.push({id: revID, name: data[i].reviewers[revID]});
+        }
+      }
     }
   }
   $scope.go=function(tag){

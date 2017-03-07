@@ -33,7 +33,7 @@
     <label>Assigned reviewer: </label>
     <select ng-model="re">
         <option value="0">All</option>
-        <option ng-repeat="x in reviewerlist" value="{{x}}">{{x}}</option>
+        <option ng-repeat="x in reviewerlist" value="{{x.id}}">{{x.name}}</option>
     </select>
     
 </fieldset>
@@ -92,11 +92,11 @@
         </tr>
     </thead>
     <tbody>
-        <tr ng-repeat="x in data | orderBy : myOrderBy" ng-show="(ye=='0'||x.year==ye)&&(co=='0'||x.countryCode==co)&&(ow=='0'||x.ownerID==ow)&&(gr=='0'||x.Group==gr)&&(st=='0'||x.status==st)&&(re=='0'||x.Reviews==re)" ng-click="go(x.folderName)">
+        <tr ng-repeat="x in data | orderBy : myOrderBy" ng-show="(ye=='0'||x.year==ye)&&(co=='0'||x.countryCode==co)&&(ow=='0'||x.ownerName==ow)&&(gr=='0'||x.Group==gr)&&(st=='0'||x.status==st)&&(re=='0'||x.reviewers[re])" ng-click="go(x.folderName)">
             <td> {{x.folderName}} </td>
             <td> {{x.year}} </td>
             <td> {{x.countryCode}} </td>
-            <td> {{x.ownerID}} </td>
+            <td> {{x.ownerName}} </td>
             <td> {{x.repositoryDate}} </td>
             <td> {{x.importDate}} </td>
             <td> {{x.Group}} </td>

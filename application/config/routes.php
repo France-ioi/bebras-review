@@ -49,7 +49,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 | Examples:	my-controller/index	-> my_controller/index
 |		my-controller/my-method	-> my_controller/my_method
 */
-$route['default_controller'] = 'User_Auth';
+$route['default_controller'] = 'User_auth';
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;
 $route['templates/view/(:any)'] = "templates/view/$1";
@@ -72,6 +72,7 @@ $route['templates/profilelisttasks'] = "templates/profilelisttasks";
 $route['templates/userupdate'] = "templates/userupdate";
 $route['templates/discussionchange'] = "templates/discussionchange";
 $route['templates/reviewchange'] = "templates/reviewchange";
+$route['templates/reviewcreate'] = "templates/reviewcreate";
 $route['templates/group'] = "templates/group";
 $route['templates/lastsave'] = "templates/lastsave";
 $route['templates/autosave'] = "templates/autosave";

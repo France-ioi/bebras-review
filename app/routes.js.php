@@ -1,6 +1,10 @@
 var app =  angular.module('main-App',['ngRoute','ngSanitize', 'toggle-switch']);
 
-var baseurl="http://127.0.0.1:8000/bebras-review/";
+<?php
+define('BASEPATH', '');
+require_once('../application/config/config.php');
+echo 'var baseurl="' . $config['base_url'] . '"';
+?>
 
 app.config(['$routeProvider',
     function($routeProvider) {

@@ -11,6 +11,17 @@ app.factory('YourServices', function($http) {
     });
   }
 
+  function reviewcreate(folderName, onSuccess, onError) {
+    var dat = $.param({folderName: folderName});
+    var config = {
+        headers:{
+          'Content-Type': 'application/x-www-form-urlencoded;'
+        }
+    };
+    $http.post(baseurl+'templates/reviewcreate', dat, config)
+        .then(onSuccess, onError);
+  }
+
   function reviewchange(id, a,b,comment, onSuccess, onError){
      var dat = $.param({
                 id, a,b,comment
@@ -30,6 +41,7 @@ app.factory('YourServices', function($http) {
 
   return {
     action: action,
-    reviewchange:reviewchange
+    reviewchange: reviewchange,
+    reviewcreate: reviewcreate
   }
 });

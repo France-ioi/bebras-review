@@ -8,7 +8,7 @@ Class Login_Database extends CI_Model {
 	// Insert registration data in database
 	public function registration_insert($data) {
 		// Query to check whether username already exist or not
-		$condition = "firstName =" . "'" . $data['firstName'] . "'";
+		$condition = "username =" . "'" . $data['username'] . "'";
 		$this->db->select('*');
 		$this->db->from('users');
 		$this->db->where($condition);
@@ -17,9 +17,8 @@ Class Login_Database extends CI_Model {
 		if ($query->num_rows() == 0)
 		{
 			// Query to insert data in database
-			$data['login']="login";
-			$data['svnLogin']="svnLogin";
-			$data['salt']="salt";
+			$data['svnLogin']="";
+			$data['salt']="salt"; // ok
 			$data['countryCode']="France";
 			$data['registrationDate']=date('y-m-d');
 			$data['LastLoginDate']=date('y-m-d');
@@ -34,15 +33,12 @@ Class Login_Database extends CI_Model {
 				return true;
 			}
 		} 
-		else 
-		{
-			return false;
-		}
+		return false;
 	}
 
 	// Read data using username and password
 	public function login($data) {
-		$condition = "firstName =" . "'" . $data['firstName'] . "' AND " . "password =" . "'" . $data['password'] . "'";
+		$condition = "username =" . "'" . $data['username'] . "' AND " . "password =" . "'" . $data['password'] . "'"; // TODO :: not very safe
 		$this->db->select('*');
 		$this->db->from('users');
 		$this->db->where($condition);
@@ -60,7 +56,7 @@ Class Login_Database extends CI_Model {
 	// Read data from database to show data in admin page
 	public function read_user_information($username)
 	{
-		$condition = "firstName =" . "'" . $username . "'";
+		$condition = "username =" . "'" . $username . "'"; // TODO :: not very safe
 		$this->db->select('*');
 		$this->db->from('users');
 		$this->db->where($condition);

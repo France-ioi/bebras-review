@@ -131,6 +131,12 @@ class Templates extends CI_Controller {
 		echo json_encode($data);
 	}
 
+	public function reviewcreate()
+	{
+		$data = $this->presentation_model->reviewcreate();
+		echo json_encode($data);
+	}
+
 	public function reviewchange()
 	{
 		$data = $this->presentation_model->reviewchange();

@@ -33,7 +33,8 @@ public function new_user_registration() {
 
 	// Check validation for user input in SignUp form
 	$this->form_validation->set_rules('username', 'Username', 'trim|required');
-	$this->form_validation->set_rules('username1', 'Username1', 'trim|required');
+	$this->form_validation->set_rules('firstName', 'Username', 'trim|required');
+	$this->form_validation->set_rules('lastName', 'Username', 'trim|required');
 	$this->form_validation->set_rules('email_value', 'Email', 'trim|required');
 	$this->form_validation->set_rules('password', 'Password', 'trim|required');
 	if ($this->form_validation->run() == FALSE) {
@@ -42,19 +43,20 @@ public function new_user_registration() {
 	else 
 	{
 		$data = array(
-			'firstName' => $this->input->post('username'),
-			'lastName' => $this->input->post('username1'),
+			'username' => $this->input->post('username'),
+			'firstName' => $this->input->post('firstName'),
+			'lastName' => $this->input->post('lastName'),
 			'email' => $this->input->post('email_value'),
 			'password' => md5($this->input->post('password'))
 		);
 		$result = $this->login_database->registration_insert($data);
 		if ($result == TRUE) {
-			$data['message_display'] = 'Registration Successfully !';
+			$data['message_display'] = 'Registered successfully!';
 			$this->load->view('login_form', $data);
 		} 
 		else 
 		{
-			$data['message_display'] = 'Username already exist!';
+			$data['message_display'] = 'Username already exists!';
 			$this->load->view('registration_form', $data);
 		}
 	}
@@ -73,17 +75,18 @@ public function user_login_process() {
 		}
 	} else {
 	$data = array(
-		'firstName' => $this->input->post('username'),
+		'username' => $this->input->post('username'),
 		'password' => md5($this->input->post('password'))
 	);
+    error_log(md5($this->input->post('password')));
 	$result = $this->login_database->login($data);
 	if ($result == TRUE) {
 		$username = $this->input->post('username');
 		$result = $this->login_database->read_user_information($username);
 		if ($result != 	false) {
 			$session_data = array(
-				'username' => $result[0]->firstName,
-				'username1' => $result[0]->lastName,
+				'username' => $result[0]->username,
+				'username1' => $result[0]->lastName, // TODO :: add more data
 				'email' => $result[0]->email,
 			);
 			// Add user data in session

@@ -1,4 +1,6 @@
 <?php
+// TODO :: Rewrite all requests to use actual JOINs
+
 class presentation_model extends CI_Model {
 	public function __construct()
 	{
@@ -6,10 +8,20 @@ class presentation_model extends CI_Model {
 	}
 	public function getdata()
 	{
+        // TODO :: temporary until i have time to figure out how this db object
+        // works
+		$users = $this->db->get('users');
+		$users_array = $users->result_array();
+		for($i=0;$i<$users->num_rows();$i++)
+		{
+            $userID_to_name[$users_array[$i]['ID']] = $users_array[$i]['firstName'] . ' ' . $users_array[$i]['lastName'];
+        }
+
 		$tasks = $this->db->get('tasks');
 		$result = $tasks->result_array();
 		for($i=0;$i<$tasks->num_rows();$i++)
 		{
+			$result[$i]['ownerName']=$userID_to_name[$result[$i]['ownerID']];
 			if($result[$i]['assignedGroupID']!="0")
 			{
 				$group = $this->db->get_where('groups',array('ID'=>$result[$i]['assignedGroupID']))->result_array();
@@ -23,8 +35,10 @@ class presentation_model extends CI_Model {
 			$sum1=0;
 			$sum2=0;
 
+            $result[$i]['reviewers'] = Array();
 			for($j=0;$j<$review->num_rows();$j++)
 			{
+                $result[$i]['reviewers'][$reviewresult[$j]['userID']] = $userID_to_name[$reviewresult[$j]['userID']];
 				$sum1+=$reviewresult[$j]['currentRating'];
 				$sum2+=$reviewresult[$j]['potentialRating'];
 			}
@@ -59,7 +73,7 @@ class presentation_model extends CI_Model {
 			else
 				$result[$i]['Group']="No Group";	
 			$user = $this->db->get_where('users',array('ID'=>$result[$i]['userID']))->result_array();
-			$result[$i]['author']=$user[0]['firstName'];
+			$result[$i]['author']=$user[0]['firstName'] . ' ' . $user[0]['lastName'];
 		}
 		
 		return $result;
@@ -82,7 +96,7 @@ class presentation_model extends CI_Model {
 	public function getprofile()
 	{
 		$username = ($this->session->userdata['logged_in']['username']);
-		$users = $this->db->get_where('users',array('firstName'=>$username));
+		$users = $this->db->get_where('users',array('username'=>$username));
 		$result = $users->result_array();
 		$group = $this->db->get_where('groups',array('ID'=>$result[0]['groupID']))->result_array();
 		$result[0]['Group']=$group[0]['name'];
@@ -111,7 +125,7 @@ class presentation_model extends CI_Model {
 		$this->db->insert('users',$item);
 
 		$username = ($this->session->userdata['logged_in']['username']);
-		$users = $this->db->get_where('users',array('firstName'=>$username));
+		$users = $this->db->get_where('users',array('username'=>$username));
 		$result = $users->result_array();
 		$group = $this->db->get_where('groups',array('ID'=>$result[0]['groupID']))->result_array();
 		$result[0]['Group']=$group[0]['name'];
@@ -133,7 +147,7 @@ class presentation_model extends CI_Model {
 		$result = $tasks->result_array();
 
 		$username = ($this->session->userdata['logged_in']['username']);
-		$users = $this->db->get_where('users',array('firstName'=>$username))->result_array();
+		$users = $this->db->get_where('users',array('username'=>$username))->result_array();
 
 		for($i=0;$i<$tasks->num_rows();$i++)
 		{	
@@ -191,7 +205,7 @@ class presentation_model extends CI_Model {
 	public function getyour()
 	{
 		$username = ($this->session->userdata['logged_in']['username']);
-		$users = $this->db->get_where('users',array('firstName'=>$username))->result_array();
+		$users = $this->db->get_where('users',array('username'=>$username))->result_array();
 		$reviews = $this->db->get_where('reviews',array('userID'=>$users[0]['ID']));
 		$result = $reviews->result_array();
 		for($i=0;$i<$reviews->num_rows();$i++)
@@ -201,11 +215,35 @@ class presentation_model extends CI_Model {
 		}
 		return $result;
 	}
+	public function reviewcreate()
+	{
+        // TODO :: check which data is available
+        $username = ($this->session->userdata['logged_in']['username']);
+        $users = $this->db->get_where('users',array('username'=>$username));
+        $userID = $users->result_array()[0]['ID'];
+
+        $tasks = $this->db->get_where('tasks', array('folderName'=>$_POST['folderName']))->result_array();
+        $taskID = $tasks[0]['ID'];
+        $newreview = array(
+            'userID' => $userID,
+            'taskID' => $taskID,
+            'currentRating' => 0,
+            'potentialrating' => 0,
+            'comment' => '',
+            'isAssigned' => 0,
+            'initialReviewDate' => date('y-m-d'),
+            'lastChangeReviewDate' => date('y-m-d')
+            );
+        $this->db->insert('reviews', $newreview);
+        $newreview['ID'] = $this->db->insert_id();
+		return $newreview;
+	}
 	public function reviewchange()
 	{
 		$this->db->update('reviews',array('comment'=>$_POST['comment']),array('ID'=>$_POST['id']));
 		$this->db->update('reviews',array('currentRating'=>$_POST['a']),array('ID'=>$_POST['id']));
-		$this->db->update('reviews',array('potentialrating'=>$_POST['b']),array('ID'=>$_POST['id']));
+		$this->db->update('reviews',array('potentialRating'=>$_POST['b']),array('ID'=>$_POST['id']));
+		$this->db->update('reviews',array('lastChangeReviewDate'=>date('y-m-d')),array('ID'=>$_POST['id']));
 		return true;
 	}
 	
@@ -225,7 +263,7 @@ class presentation_model extends CI_Model {
 			for($j=0;$j<$co;$j++)
 			{
 				$user = $this->db->get_where('users',array('ID'=>$list[$j]['userID']))->result_array();
-				$list[$j]['author']=$user[0]['firstName'];
+				$list[$j]['author']=$user[0]['firstName'] . ' ' . $user[0]['lastName'];
 				$sum1+=$list[$j]['currentRating'];
 				$sum2+=$list[$j]['potentialRating'];
 			}
@@ -249,7 +287,7 @@ class presentation_model extends CI_Model {
 	public function getmessage()
 	{
 		$username = ($this->session->userdata['logged_in']['username']);
-		$user = $this->db->get_where('users',array('firstName'=>$username))->result_array();
+		$user = $this->db->get_where('users',array('username'=>$username))->result_array();
 		$f=$user[0]['role']=='Admin';
 		$reviews = $this->db->get('messages');
 		$count=$reviews->num_rows();
@@ -259,9 +297,9 @@ class presentation_model extends CI_Model {
 		for($i=0;$i<$count;$i++)
 		{	
 			$user = $this->db->get_where('users',array('ID'=>$result[$i]['userID']))->result_array();
-			$result[$i]['author']=$user[0]['firstName'];
-			$result[$i]['flag']=($user[0]['firstName']==$username);
-			$result[$i]['flag1']=($user[0]['firstName']==$username||$f);
+			$result[$i]['author']=$user[0]['firstName'] . ' ' . $user[0]['lastName'];
+			$result[$i]['flag']=($user[0]['username']==$username);
+			$result[$i]['flag1']=($user[0]['username']==$username||$f);
 			$tasks = $this->db->get_where('tasks',array('ID'=>$result[$i]['taskID']))->result_array();
 			$result[$i]['folderName']=$tasks[0]['folderName'];
 		}
@@ -277,7 +315,7 @@ class presentation_model extends CI_Model {
 	public function sendmess()
 	{
 		$username = ($this->session->userdata['logged_in']['username']);
-		$users = $this->db->get_where('users',array('firstName'=>$username))->result_array();
+		$users = $this->db->get_where('users',array('username'=>$username))->result_array();
 		$tasks = $this->db->get_where('tasks',array('folderName'=>$_POST['taskID']))->result_array();
 		$item=array('taskID'=>$tasks[0]['ID'], 'userID'=>$users[0]['ID'], 'content'=>$_POST['mess'], 'dateCreated'=>date('y-m-d'), 'dateModified'=>date('y-m-d'));
 		$this->db->insert('messages', $item);
@@ -313,7 +351,7 @@ class presentation_model extends CI_Model {
 		$tasks = $this->db->get('tasks');
 		$result = $tasks->result_array();
 		$username = ($this->session->userdata['logged_in']['username']);
-		$users = $this->db->get_where('users',array('firstName'=>$username))->result_array();
+		$users = $this->db->get_where('users',array('username'=>$username))->result_array();
 		$result['autoLoadTasks']=$users[0]['autoLoadTasks'];
 		$result['localCheckoutFolder']=$users[0]['localCheckoutFolder'];
 		for($i=0;$i<$tasks->num_rows();$i++)
@@ -335,7 +373,7 @@ class presentation_model extends CI_Model {
 		$tasks = $this->db->get('tasks');
 		$result = $tasks->result_array();
 		$username = ($this->session->userdata['logged_in']['username']);
-		$users = $this->db->get_where('users',array('firstName'=>$username))->result_array();
+		$users = $this->db->get_where('users',array('username'=>$username))->result_array();
 		$result['autoLoadTasks']=$users[0]['autoLoadTasks'];
 		$result['localCheckoutFolder']=$users[0]['localCheckoutFolder'];
 		for($i=0;$i<$tasks->num_rows();$i++)
@@ -357,7 +395,7 @@ class presentation_model extends CI_Model {
 		$tasks = $this->db->get('tasks');
 		$result = $tasks->result_array();
 		$username = ($this->session->userdata['logged_in']['username']);
-		$users = $this->db->get_where('users',array('firstName'=>$username))->result_array();
+		$users = $this->db->get_where('users',array('username'=>$username))->result_array();
 		$result['autoLoadTasks']=$users[0]['autoLoadTasks'];
 		$result['localCheckoutFolder']=$users[0]['localCheckoutFolder'];
 		for($i=0;$i<$tasks->num_rows();$i++)
@@ -378,7 +416,7 @@ class presentation_model extends CI_Model {
 	public function autosave()
 	{
 		$username = ($this->session->userdata['logged_in']['username']);
-		$this->db->update('users',array('autoLoadTasks'=>"true"),array('firstName'=>$username));
+		$this->db->update('users',array('autoLoadTasks'=>"true"),array('username'=>$username)); // TODO :: uh, always true?
 	}
 
 	public function svnlist($repository)

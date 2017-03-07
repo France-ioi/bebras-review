@@ -20,14 +20,18 @@
 			echo "</div>";
 			echo form_open('user_auth/new_user_registration');
 
-			echo form_label('Firstname : ');
+			echo form_label('Username : ');
 			echo "<br/>";
 			echo form_input('username');
+			echo "<br/>";
+			echo form_label('Firstname : ');
+			echo "<br/>";
+			echo form_input('firstName');
 			echo "<br/>";
 			echo "<br/>";
 			echo form_label('Lastname : ');
 			echo "<br/>";
-			echo form_input('username1');
+			echo form_input('lastName');
 			echo "<div class='error_msg'>";
 			if (isset($message_display)) {
 			echo $message_display;

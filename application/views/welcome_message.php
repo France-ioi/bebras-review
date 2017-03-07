@@ -31,7 +31,7 @@ header("location: login");
 	<script src="<?php echo base_url(); ?>assets/angular-toggle-switch.js"></script>
 
 	<!-- MY App -->
-	<script src="<?php echo base_url(); ?>app/routes.js"></script>
+	<script src="<?php echo base_url(); ?>app/routes.js.php"></script>
 	<script src="<?php echo base_url(); ?>app/packages/dirPagination.js"></script>
 	<script src="<?php echo base_url(); ?>app/packages/directive.js"></script>
 	

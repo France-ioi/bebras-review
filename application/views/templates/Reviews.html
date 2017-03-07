@@ -1,4 +1,4 @@
-<div style="height:500px">
+<div style="height: 80%">
 <div class="col-md-3">
     <fieldset style="border-width: 2px; border-style: solid; border-color: threedface; padding:10px;">
         <legend style="width:initial; border:0; margin:0;">Filters</legend>
@@ -39,13 +39,13 @@
     <div ng-repeat="x in data | orderBy : myOrderBy" ng-show="(au=='0'||x.author==au)&&(ye=='0'||x.year==ye)&&(co=='0'||x.countryCode==co)&&(gr=='0'||x.Group==gr)" style="clear:both; border-radius: 5px; border:1px solid; margin:10px; padding:10px; height:30%;">
         <div class="top">
             <label style="width:90px">Review by:</label>
-            <label style="width:80px"> {{x.author}}</label>
-            <a href="#/Tasks/General?id={{x.taskID}}">{{x.folderName}} </a>
-            {{x.Group}}
+            <label style="width:160px"> {{x.author}}</label>
+            <a href="#/Tasks/General?id={{x.folderName}}">{{x.folderName}} </a>
+            <i>{{x.Group}}</i>
         </div>
         <div class="bottom row" style="height:80%;">
             <div class="col-md-3">
-                <label style="width:90px">Review data:</label>
+                <label style="width:90px">Review date:</label>
                 <label style="width:80px">{{x.initialReviewDate}} </label><br/>
                 <label style="width:90px">Last change:</label>
                 <label style="width:80px">{{x.lastChangeReviewDate}}</label> <br/>
