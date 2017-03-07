@@ -1,4 +1,4 @@
-<div style="height:500px;">
+<div style="height:3000px;">
     <div class="col-md-3">
         <select ng-model="sel" size="5" style="width:100%; height:100%;">
             <option disabled value="0" style="background-color: rgb(200,200,200);">FolderName</option>
@@ -40,8 +40,11 @@
                         </div>
                     </div>
                 </div>
-                <div ng-if="!x.link">
-                    <span class="pull-right" style="padding-right: 20px;"><b>There is no HTML file for this task.</b></span>
+                <div ng-if="!x.link" style="padding-top: 40px; padding-left: 20px; padding-right: 20px;">
+                    <div class="alert alert-danger" role="alert">
+                        <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                        <b>There is no HTML file for this task.</b>
+                    </div>
                 </div>
             </div>
             <div ng-repeat="x in data"  ng-if="x['folderName']==sel&&toggleflag==true">
@@ -64,8 +67,11 @@
                         <iframe ng-src="{{trust(x.otherlink)}}" style="width:100%; height:87%; margin-top:10px; border:1px solid black;"></iframe>
                     </div>
                 </div>
-                <div ng-if="!x.otherlink">
-                    <span class="pull-right" style="padding-right: 20px;"><b>There is no HTML file for this task.</b></span>
+                <div ng-if="!x.otherlink" style="padding-top: 40px; padding-left: 20px; padding-right: 20px;">
+                    <div class="alert alert-danger" role="alert">
+                        <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                        <b>There is no HTML file for this task.</b>
+                    </div>
                 </div>
             </div>
         </div>
