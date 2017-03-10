@@ -1,4 +1,4 @@
-<div style="height:500px;">
+<div style="height:700px;">
 <div class="col-md-3">
     <select ng-model="sel" size="5" style="width:100%; height:100%;">
         <option disabled value='0' style="background-color: rgb(200,200,200);">FolderName</option>
@@ -25,32 +25,34 @@
             </div>
         </div>
     </nav>
-    <div style="border:1px solid; padding:10px; height:74%" ng-repeat="x in real" ng-show="x.folderName==sel">
+    <div style="border:1px solid; padding:10px; height: 420px" ng-repeat="x in real" ng-show="x.folderName==sel">
         <div class="col-md-6">
-            <label class="pull-left" style="width:140px; clear:left;"> TextID: </label> 
+            <label class="pull-left" style="width:140px; clear:both;"> TextID: </label> 
             <label style="clear:right">{{x.textID}}</label><br/>
-            <label class="pull-left" style="width:140px; clear:left;"> Folder name: </label> 
+            <label class="pull-left" style="width:140px; clear:both;"> Folder name: </label> 
             <label style="clear:right">{{x.folderName}}</label><br/>
-            <label class="pull-left" style="width:140px; clear:left;"> Year: </label> 
+            <label class="pull-left" style="width:140px; clear:both;"> Folder path: </label> 
+            <label style="clear:right">{{x.folderPath}}</label><br/>
+            <label class="pull-left" style="width:140px; clear:both;"> Year: </label> 
             <label style="clear:right">{{x.year}}</label><br/>
-            <label class="pull-left" style="width:140px; clear:left;"> Country Code: </label> 
+            <label class="pull-left" style="width:140px; clear:both;"> Country Code: </label> 
             <label style="clear:right">{{x.countryCode}}</label><br/>
-            <label class="pull-left" style="width:140px; clear:left;"> Repository date: </label> 
+            <label class="pull-left" style="width:140px; clear:both;"> Creation date: </label> 
             <label style="clear:right">{{x.repositoryDate}}</label><br/>
-            <label class="pull-left" style="width:140px; clear:left;"> Creation date: </label> 
-            <label style="clear:right">{{x.importDate}}</label><br/>
-            <label class="pull-left" style="width:140px; clear:left;"> svnLogin: </label> 
-            <label style="clear:right">{{x.svnLogin}}</label><br/>
-            <label class="pull-left" style="width:140px; clear:left;"> ownerID: </label> 
-            <label style="clear:right">{{x.ownerID}}</label><br/>
-            <label class="pull-left" style="width:140px; clear:left;"> htmlFileName: </label> 
-            <input ng-model="x.htmlFilename" style="clear:right; margin-bottom:5px;" ng-readonly="((x.adminflag)?false:true)">
-            <label class="pull-left" style="width:140px; clear:left;"> odtFileName: </label> 
-            <input ng-model="x.odtFileName" style="clear:right; margin-bottom:5px;" ng-readonly="((x.adminflag)?false:true)">
-            <label class="pull-left" style="width:140px; clear:left;"> pdfFileName: </label> 
-            <input ng-model="x.pdfFileName" style="clear:right; margin-bottom:5px;" ng-readonly="((x.adminflag)?false:true)">
-            <label class="pull-left" style="width:140px; clear:left;"> Last change: </label> 
+            <label class="pull-left" style="width:140px; clear:both;"> Last change: </label> 
             <label style="clear:right">{{x.lastChangeDate}}</label><br/>
+            <label class="pull-left" style="width:140px; clear:both;"> Import date: </label> 
+            <label style="clear:right">{{x.importDate}}</label><br/>
+            <label class="pull-left" style="width:140px; clear:both;"> svnLogin: </label> 
+            <label style="clear:right">{{x.svnLogin}}</label><br/>
+            <label class="pull-left" style="width:140px; clear:both;"> ownerID: </label> 
+            <label style="clear:right">{{x.ownerID}}</label><br/>
+            <label class="pull-left" style="width:140px; clear:both;"> htmlFileName: </label> 
+            <input ng-model="x.htmlFileName" style="clear:right; margin-bottom:5px;" ng-readonly="((x.adminflag)?false:true)">
+            <label class="pull-left" style="width:140px; clear:both;"> odtFileName: </label> 
+            <input ng-model="x.odtFileName" style="clear:right; margin-bottom:5px;" ng-readonly="((x.adminflag)?false:true)">
+            <label class="pull-left" style="width:140px; clear:both;"> pdfFileName: </label> 
+            <input ng-model="x.pdfFileName" style="clear:right; margin-bottom:5px;" ng-readonly="((x.adminflag)?false:true)">
         </div>
         <div class="col-md-6">
             <label class="pull-left" style="width:140px; clear:left;"> Assigned Group: </label> 
