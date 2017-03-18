@@ -47,7 +47,7 @@ public function new_user_registration() {
 			'firstName' => $this->input->post('firstName'),
 			'lastName' => $this->input->post('lastName'),
 			'email' => $this->input->post('email_value'),
-			'password' => md5($this->input->post('password'))
+			'password' => $this->input->post('password')
 		);
 		$result = $this->login_database->registration_insert($data);
 		if ($result == TRUE) {
@@ -76,7 +76,7 @@ public function user_login_process() {
 	} else {
 	$data = array(
 		'username' => $this->input->post('username'),
-		'password' => md5($this->input->post('password'))
+		'password' => $this->input->post('password')
 	);
     error_log(md5($this->input->post('password')));
 	$result = $this->login_database->login($data);
@@ -114,7 +114,7 @@ public function user_login_process() {
 			'username' => ''
 		);
 		$this->session->unset_userdata('logged_in', $sess_array);
-		$data['message_display'] = 'Successfully Logout';
+		$data['message_display'] = 'Successfully logged out';
 		$this->load->view('login_form', $data);
 	}
 

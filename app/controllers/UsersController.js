@@ -23,27 +23,42 @@ app.controller('UsersController', ['$scope', '$location',  'UsersServices', func
   $scope.data="loading";
   $scope.councode="France";
   $scope.myOrderBy="firstName";
+  $scope.ownID = -1;
+  $scope.isAdmin = true;
+
+  $scope.groupsList = [];
+
+  $scope.countrylist=new Array();
+  $scope.co="";
 
   //userid->tasks
   $scope.show = function(data)
   {
-    $scope.data=data;
+    var usersList = data.usersList;
+    $scope.data = usersList;
+    $scope.groupsList = data.groupsList;
+    $scope.ownID = data.ownID;
+    $scope.isAdmin = data.isAdmin;
     var i=0;
-    for(i=0;i<data.length;i++)
+    for(i=0;i<usersList.length;i++)
     {
-      $scope.listtasks(data[i]['ID']);
+      $scope.listtasks(usersList[i]['ID']);
     }
-    var searchObject = $location.search();
-    if(searchObject['id']==null)
-      $scope.sel='0';
-    else
-      $scope.sel=searchObject['id'];
-    
+
+    var length=0;
+    for(i=0;i<usersList.length;i++)
+    {
+      for(j=0;j<i;j++)
+        if(usersList[i].country==usersList[j].country)
+          break;
+      if(i==j)
+        $scope.countrylist[length++]=usersList[i].country;
+    }
   }
 
   $scope.listts = function (data)
   {
-    $location.url("Tasks/General?id="+data);
+    $location.url("Tasks?id="+data);
   }
 
   $scope.ch = function (id,member,data)

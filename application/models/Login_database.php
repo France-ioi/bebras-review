@@ -8,17 +8,14 @@ Class Login_Database extends CI_Model {
 	// Insert registration data in database
 	public function registration_insert($data) {
 		// Query to check whether username already exist or not
-		$condition = "username =" . "'" . $data['username'] . "'";
-		$this->db->select('*');
-		$this->db->from('users');
-		$this->db->where($condition);
-		$this->db->limit(1);
-		$query = $this->db->get();
+        $query = $this->db->get_where('users',array('username' => $data['username']));
 		if ($query->num_rows() == 0)
 		{
 			// Query to insert data in database
+			$data['salt'] = md5(time());
+            $data['password'] = md5($data['password'] . $data['salt']);
+
 			$data['svnLogin']="";
-			$data['salt']="salt"; // ok
 			$data['countryCode']="France";
 			$data['registrationDate']=date('y-m-d');
 			$data['LastLoginDate']=date('y-m-d');
@@ -38,17 +35,17 @@ Class Login_Database extends CI_Model {
 
 	// Read data using username and password
 	public function login($data) {
-		$condition = "username =" . "'" . $data['username'] . "' AND " . "password =" . "'" . $data['password'] . "'"; // TODO :: not very safe
-		$this->db->select('*');
-		$this->db->from('users');
-		$this->db->where($condition);
-		$this->db->limit(1);
-		$query = $this->db->get();
+        $query = $this->db->get_where('users',array('username' => $data['username']));
 
 		if ($query->num_rows() == 1) {
-            if($query->result_array()[0]['role'] == 'Unconfirmed') {
+            $result = $query->result_array()[0];
+            $hashed_password = md5($data['password'] . $result['salt']);
+            if($result['password'] != $hashed_password) {
+                return 'invalid';
+            } elseif($result['role'] == 'Unconfirmed') {
                 return 'unconfirmed';
             } else {
+                $this->db->update('users', array('lastLoginDate' => date('y-m-d')), array('ID' => $result['ID']));
     			return 'ok';
             }
 		} else {
@@ -59,12 +56,7 @@ Class Login_Database extends CI_Model {
 	// Read data from database to show data in admin page
 	public function read_user_information($username)
 	{
-		$condition = "username =" . "'" . $username . "'"; // TODO :: not very safe
-		$this->db->select('*');
-		$this->db->from('users');
-		$this->db->where($condition);
-		$this->db->limit(1);
-		$query = $this->db->get();
+        $query = $this->db->get_where('users',array('username' => $username));
 
 		if ($query->num_rows() == 1) {
 			return $query->result();

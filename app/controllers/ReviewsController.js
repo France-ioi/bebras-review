@@ -45,10 +45,10 @@ app.controller('ReviewsController', ['$scope',  'ReviewsServices', function($sco
     for(i=0;i<$scope.data.length;i++)
     {
       for(j=0;j<i;j++)
-        if(data[i].countryCode==data[j].countryCode)
+        if(data[i].country==data[j].country)
           break;
       if(i==j)
-        $scope.countrylist[length++]=data[i].countryCode;
+        $scope.countrylist[length++]=data[i].country;
     }
 
     length=0;

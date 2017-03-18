@@ -1,14 +1,39 @@
-app.controller('TasksController', ['$scope', '$location',  'TasksServices', function($scope,$location,  TasksServices){
-  $scope.action=function(){
-    TasksServices.action(function(response){
-      $scope.show(response.data);
+app.controller('TasksController', ['$scope', '$location', '$sce', 'TasksServices', function($scope, $location, $sce, TasksServices){
+  $scope.getTasks=function(initial) {
+    TasksServices.getData('tasks', function(response){
+      $scope.loadData(response.data, initial);
     }, function(response){
-      $scope.show("Failed");
+      $scope.loadData("Failed", initial); // TODO :: replace with an actual message
     });
   }
-  $scope.data="loading";
-  $scope.flag=0;
+  $scope.getAll=function(){
+    TasksServices.getData('All', function(response){
+      $scope.showAll(response.data);
+    }, function(response){
+      $scope.showAll("Failed");
+    });
+  }
+  $scope.getTasklist=function(){
+    TasklistServices.getData(function(response){
+      $scope.list(response.data);
+    }, function(response){
+      $scope.list("Failed List");
+    });
+  }
 
+  $scope.listMode = true;
+  $scope.curView = 'general';
+  $scope.sel = null;
+  $scope.taskData = null;
+
+  $scope.tasksList = [];
+  $scope.groupsList = [];
+  $scope.reviewsList = [];
+  $scope.messagesList = [];
+  $scope.flag = 0; // TODO :: ???
+  $scope.isAdmin = false;
+
+  // Filters
   $scope.yearlist=new Array();
   $scope.ye="0";
   $scope.countrylist=new Array();
@@ -23,84 +48,210 @@ app.controller('TasksController', ['$scope', '$location',  'TasksServices', func
   $scope.reviewerlist=new Array();
   $scope.re="0";
 
-  $scope.show = function(data)
+  // Files views
+  $scope.toggleflag = false;
+  $scope.autoloadTasks = true;
+  $scope.httpflag = false;
+
+  // For reviews
+  $scope.hasReviews = {};
+
+  $scope.select = function(newSel) {
+    // Select a task
+    $scope.taskData = null;
+    if(newSel) {
+      $scope.sel = newSel;
+      for(i=0; i < $scope.tasksList.length; i++) {
+        if($scope.tasksList[i].folderName == newSel) {
+          $scope.taskData = $scope.tasksList[i];
+          for(var i=0; i<$scope.reviewsList.length; i++) {
+            var curReview = $scope.reviewsList[i];
+            if($scope.taskData.folderName == curReview.folderName) {
+              $scope.taskData.currentRating = curReview.currentRating;
+              $scope.taskData.potentialRating = curReview.potentialRating;
+              $scope.taskData.reviewId = curReview.ID;
+              $scope.taskData.reviewComment = curReview.comment;
+            }
+          }
+          break;
+        }
+      }
+      if(!$scope.taskData) {
+        // Task not found
+        $scope.sel = null;
+      }
+    } else {
+      $scope.sel = null;
+    }
+
+    $scope.listMode = !$scope.sel;
+  }
+
+  $scope.goView = function(newView) {
+    $scope.listMode = false;
+    $scope.curView = newView;
+  }
+
+  $scope.loadData = function(data, initial)
   {
-    $scope.data=data;
+    var tasksList = data.tasksList;
+    $scope.tasksList = tasksList;
+    $scope.groupsList = data.groupsList;
+    $scope.reviewsList = data.reviewsList;
+    $scope.messagesList = data.messagesList;
+    $scope.autoloadTasks = data.autoloadTasks == 'true';
+    $scope.isAdmin = data.isAdmin;
     var i,j;
     var length=0;
 
     // TODO :: better logic to make the lists...
-    for(i=0;i<$scope.data.length;i++)
+    for(i=0;i<tasksList.length;i++)
     {
       for(j=0;j<i;j++)
-        if(data[i].year==data[j].year)
+        if(tasksList[i].year==tasksList[j].year)
           break;
       if(i==j)
-        $scope.yearlist[length++]=data[i].year;
+        $scope.yearlist[length++]=tasksList[i].year;
     }
 
     length=0;
-    for(i=0;i<$scope.data.length;i++)
+    for(i=0;i<tasksList.length;i++)
     {
       for(j=0;j<i;j++)
-        if(data[i].countryCode==data[j].countryCode)
+        if(tasksList[i].country==tasksList[j].country)
           break;
       if(i==j)
-        $scope.countrylist[length++]=data[i].countryCode;
+        $scope.countrylist[length++]=tasksList[i].country;
     }
 
     length=0;
-    for(i=0;i<$scope.data.length;i++)
+    for(i=0;i<tasksList.length;i++)
     {
       for(j=0;j<i;j++)
-        if(data[i].ownerName==data[j].ownerName)
+        if(tasksList[i].ownerName==tasksList[j].ownerName)
           break;
       if(i==j)
-        $scope.ownerlist[length++]=data[i].ownerName;
+        $scope.ownerlist[length++]=tasksList[i].ownerName;
       // TODO :: use IDs for filtering, name for display
     }
 
     length=0;
-    for(i=0;i<$scope.data.length;i++)
+    for(i=0;i<tasksList.length;i++)
     {
       for(j=0;j<i;j++)
-        if(data[i].Group==data[j].Group)
+        if(tasksList[i].Group==tasksList[j].Group)
           break;
       if(i==j)
-        $scope.grouplist[length++]=data[i].Group;
+        $scope.grouplist[length++]=tasksList[i].Group;
     }
 
     length=0;
-    for(i=0;i<$scope.data.length;i++)
+    for(i=0;i<tasksList.length;i++)
     {
       for(j=0;j<i;j++)
-        if(data[i].status==data[j].status)
+        if(tasksList[i].status==tasksList[j].status)
           break;
       if(i==j)
-        $scope.statuslist[length++]=data[i].status;
+        $scope.statuslist[length++]=tasksList[i].status;
     }
 
     length=0;
-    for(i=0;i<$scope.data.length;i++)
+    for(i=0;i<tasksList.length;i++)
     {
-      for(var revID in data[i].reviewers) {
+      for(var revID in tasksList[i].reviewers) {
         if($scope.reviewerIDlist.indexOf(revID) < 0) {
           $scope.reviewerIDlist.push(revID);
-          $scope.reviewerlist.push({id: revID, name: data[i].reviewers[revID]});
+          $scope.reviewerlist.push({id: revID, name: tasksList[i].reviewers[revID]});
         }
       }
     }
-  }
-  $scope.go=function(tag){
-     $location.url("/Tasks/General?id="+tag);
+
+    $scope.httpflag = (data.localCheckoutFolder.substring(0,4) == 'http');
+
+    for(var i=0; i<$scope.reviewsList.length; i++) {
+      $scope.hasReviews[$scope.reviewsList[i].folderName] = true;
+    }
+
+    if(initial) {
+      // First load of the page
+      var searchObject = $location.search();
+      if(searchObject['id']) {
+        $scope.select(searchObject['id']);
+      } else {
+        $scope.select(null);
+      }
+
+    }
   }
 
-  $scope.svnbutton=function()
+  $scope.trust = function(url)
+  {
+    return $sce.trustAsResourceUrl(url);
+  }
+
+  $scope.updateSvn = function()
   {
     TasksServices.updatesvn(function(response){
     }, function(response){
     });
   }
 
-  $scope.action();
+  $scope.chgReview = function(id,a,b ,comment)
+  {
+    TasksServices.reviewchange(id, a,b,comment, function(response){
+    }, function(response){
+    });
+  }
+
+  $scope.createReview = function(folderName) {
+    TasksServices.reviewcreate(folderName,
+        function(response) {
+          // TODO :: do not reload everything (temporary)
+          $scope.getTasks();
+          },
+        function(response){});
+  }
+
+  $scope.messagesend = function()
+  {
+    var mess = $('#newMessage').val();
+    TasksServices.sendmess($scope.sel, mess, function(response){
+      $('#newMessage').val('');
+      $scope.getTasks();
+      }, function () {});
+  }
+
+  $scope.changemess = function(a,b)
+  {
+    TasksServices.changemess(a,b,function(response){
+      $scope.getTasks();
+    }, function(response){
+    });
+  }
+
+  $scope.lastsave = function(data) {
+    TasksServices.lastsave(data, function(response){
+      $scope.loadData(response.data);
+    },function(response){
+    });
+  }
+
+  $scope.$watch('sel', $scope.select);
+
+  $scope.getTasks(true);
 }]);
+
+/*
+    Code to check whether the task name is valid (why?)
+    var year=$scope.sel.substring(0,4);
+    $scope.check=$scope.check&&!isNaN(year);
+    var symbol=$scope.sel.substring(4,5);
+    $scope.check=$scope.check&&(symbol=='-');
+    var countrycode=$scope.sel.substring(5,7);
+    $scope.check=$scope.check&&(isNaN(countrycode));
+    symbol=$scope.sel.substring(7,8);
+    $scope.check=$scope.check&&(symbol=='-');
+    var number=$scope.sel.substring(8,10);
+    $scope.check=$scope.check&&(!isNaN(number));
+  }
+*/

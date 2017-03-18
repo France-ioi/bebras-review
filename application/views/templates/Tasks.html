@@ -1,110 +1,71 @@
 <fieldset style="border-width: 2px; border-style: solid; border-color: threedface; padding:10px;">
-    <legend style="width:initial; border:0; margin:0;">Filters</legend>
-    <label>Year: </label>
-    <select ng-model="ye">
-        <option value="0">All</option>
-        <option ng-repeat="x in yearlist" value="{{x}}">{{x}}</option>
-    </select>
+  <legend style="width:initial; border:0; margin:0;">Filters</legend>
+  <label>Year: </label>
+  <select ng-model="ye">
+    <option value="0">All</option>
+    <option ng-repeat="x in yearlist" value="{{x}}">{{x}}</option>
+  </select>
 
-    <label>Country: </label>
-    <select ng-model="co">
-        <option value="0">All</option>
-        <option ng-repeat="x in countrylist" value="{{x}}">{{x}}</option>
-    </select>
+  <label>Country: </label>
+  <select ng-model="co">
+    <option value="0">All</option>
+    <option ng-repeat="x in countrylist" value="{{x}}">{{x}}</option>
+  </select>
 
-    <label>Owner: </label>
-    <select ng-model="ow">
-        <option value="0">All</option>
-        <option ng-repeat="x in ownerlist" value="{{x}}">{{x}}</option>
-    </select>
-    
-    <label>Group: </label>
-    <select ng-model="gr">
-        <option value="0">All</option>
-        <option ng-repeat="x in grouplist" value="{{x}}">{{x}}</option>
-    </select>
-    
-    <label>Status: </label>
-    <select ng-model="st">
-        <option value="0">All</option>
-        <option ng-repeat="x in statuslist" value="{{x}}">{{x}}</option>
-    </select>
-    
-    <label>Assigned reviewer: </label>
-    <select ng-model="re">
-        <option value="0">All</option>
-        <option ng-repeat="x in reviewerlist" value="{{x.id}}">{{x.name}}</option>
-    </select>
-    
+  <label>Owner: </label>
+  <select ng-model="ow">
+    <option value="0">All</option>
+    <option ng-repeat="x in ownerlist" value="{{x}}">{{x}}</option>
+  </select>
+  
+  <label>Group: </label>
+  <select ng-model="gr">
+    <option value="0">All</option>
+    <option ng-repeat="x in grouplist" value="{{x}}">{{x}}</option>
+  </select>
+  
+  <label>Status: </label>
+  <select ng-model="st">
+    <option value="0">All</option>
+    <option ng-repeat="x in statuslist" value="{{x}}">{{x}}</option>
+  </select>
+  
+  <label>Assigned reviewer: </label>
+  <select ng-model="re">
+    <option value="0">All</option>
+    <option ng-repeat="x in reviewerlist" value="{{x.id}}">{{x.name}}</option>
+  </select>
+  
 </fieldset>
 <br/>
-<table class="table table-bordered pagin-table">
-    <thead>
-        <tr>
-            <th ng-click="myOrderBy=((myOrderBy=='folderName')?'-folderName':'folderName')">Folder
-            <i class="fa fa-fw fa-sort" ng-if="myOrderBy!='folderName'&&myOrderBy!='-folderName'"></i>
-            <i class="fa fa-fw fa-sort-asc" ng-if="myOrderBy=='folderName'"></i>
-            <i class="fa fa-fw fa-sort-desc" ng-if="myOrderBy=='-folderName'"></i></th>
-
-            <th ng-click="myOrderBy=((myOrderBy=='year')?'-year':'year')">Year
-            <i class="fa fa-fw fa-sort" ng-if="myOrderBy!='year'&&myOrderBy!='-year'"></i>
-            <i class="fa fa-fw fa-sort-asc" ng-if="myOrderBy=='year'"></i>
-            <i class="fa fa-fw fa-sort-desc" ng-if="myOrderBy=='-year'"></i></th>
-
-            <th ng-click="myOrderBy=((myOrderBy=='countryCode')?'-countryCode':'countryCode')">Country
-            <i class="fa fa-fw fa-sort" ng-if="myOrderBy!='countryCode'&&myOrderBy!='-countryCode'"></i>
-            <i class="fa fa-fw fa-sort-asc" ng-if="myOrderBy=='countryCode'"></i>
-            <i class="fa fa-fw fa-sort-desc" ng-if="myOrderBy=='-countryCode'"></i></th>
-            
-            <th> Owner </th>
-
-            <th ng-click="myOrderBy=((myOrderBy=='repositoryDate')?'-repositoryDate':'repositoryDate')">Created
-            <i class="fa fa-fw fa-sort" ng-if="myOrderBy!='repositoryDate'&&myOrderBy!='-repositoryDate'"></i>
-            <i class="fa fa-fw fa-sort-asc" ng-if="myOrderBy=='repositoryDate'"></i>
-            <i class="fa fa-fw fa-sort-desc" ng-if="myOrderBy=='-repositoryDate'"></i></th>
-
-            <th ng-click="myOrderBy=((myOrderBy=='importDate')?'-importDate':'importDate')">Changed
-            <i class="fa fa-fw fa-sort" ng-if="myOrderBy!='importDate'&&myOrderBy!='-importDate'"></i>
-            <i class="fa fa-fw fa-sort-asc" ng-if="myOrderBy=='importDate'"></i>
-            <i class="fa fa-fw fa-sort-desc" ng-if="myOrderBy=='-importDate'"></i></th>
-
-            <th> Group </th>
-
-            <th ng-click="myOrderBy=((myOrderBy=='status')?'-status':'status')">Status
-            <i class="fa fa-fw fa-sort" ng-if="myOrderBy!='status'&&myOrderBy!='-status'"></i>
-            <i class="fa fa-fw fa-sort-asc" ng-if="myOrderBy=='status'"></i>
-            <i class="fa fa-fw fa-sort-desc" ng-if="myOrderBy=='-status'"></i></th>
-
-            <th ng-click="myOrderBy=((myOrderBy=='Reviews')?'-Reviews':'Reviews')">Reviews
-            <i class="fa fa-fw fa-sort" ng-if="myOrderBy!='Reviews'&&myOrderBy!='-Reviews'"></i>
-            <i class="fa fa-fw fa-sort-asc" ng-if="myOrderBy=='Reviews'"></i>
-            <i class="fa fa-fw fa-sort-desc" ng-if="myOrderBy=='-Reviews'"></i></th>
-
-            <th ng-click="myOrderBy=((myOrderBy=='ar')?'-ar':'ar')">As of now
-            <i class="fa fa-fw fa-sort" ng-if="myOrderBy!='ar'&&myOrderBy!='-ar'"></i>
-            <i class="fa fa-fw fa-sort-asc" ng-if="myOrderBy=='ar'"></i>
-            <i class="fa fa-fw fa-sort-desc" ng-if="myOrderBy=='-ar'"></i></th>
-
-            <th ng-click="myOrderBy=((myOrderBy=='p')?'-p':'p')">Potential
-            <i class="fa fa-fw fa-sort" ng-if="myOrderBy!='p'&&myOrderBy!='-p'"></i>
-            <i class="fa fa-fw fa-sort-asc" ng-if="myOrderBy=='p'"></i>
-            <i class="fa fa-fw fa-sort-desc" ng-if="myOrderBy=='-p'"></i></th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr ng-repeat="x in data | orderBy : myOrderBy" ng-show="(ye=='0'||x.year==ye)&&(co=='0'||x.countryCode==co)&&(ow=='0'||x.ownerName==ow)&&(gr=='0'||x.Group==gr)&&(st=='0'||x.status==st)&&(re=='0'||x.reviewers[re])" ng-click="go(x.folderName)">
-            <td> {{x.folderName}} </td>
-            <td> {{x.year}} </td>
-            <td> {{x.countryCode}} </td>
-            <td> {{x.ownerName}} </td>
-            <td> {{x.repositoryDate}} </td>
-            <td> {{x.importDate}} </td>
-            <td> {{x.Group}} </td>
-            <td> {{x.status}} </td>
-            <td> {{x.Reviews}} </td>
-            <td> {{x.ar}} </td>
-            <td> {{x.p}} </td>
-        </tr>
-    </tbody>
-</table>
-<button ng-click="svnbutton()">SVN Update</button>
+<div ng-if="listMode" ng-include="'/templates/view/tasksList.html'"></div>
+<div ng-if="!listMode">
+  <div class="col-md-3" style="height: 700px;">
+    <select ng-model="sel" ng-change="select(sel)" size="5" style="width:100%; height:100%;">
+      <option disabled value="0" style="background-color: rgb(200,200,200);">Folder name</option>
+      <option ng-repeat="x in tasksList" value="{{x.folderName}}" ng-selected='sel == x.folderName' ng-if="(ye=='0'||x.year==ye)&&(co=='0'||x.country==co)&&(ow=='0'||x.ownerName==ow)&&(gr=='0'||x.Group==gr)&&(st=='0'||x.status==st)&&(re=='0'||x.reviewers[re])">{{x.folderName}}</option>
+    </select>
+  </div>
+  <div class="col-md-9" style="height:100%; padding:0;" ng-if="sel!='0'">
+    <nav class="navbar navbar-default">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <h3 style="padding:0px 10px;">{{sel}}</h3>
+        </div>
+        <div class="collapse navbar-collapse">
+          <ul class="nav navbar-nav">
+            <li><a ng-click="goView('general')">Infos</a></li>
+            <li><a ng-click="goView('html')">HTML Version</a></li>
+            <li><a ng-click="goView('odt')">ODT Version</a></li>
+            <li><a ng-click="goView('pdf')">PDF Version</a></li>
+            <li><a ng-click="goView('your')">Your Review</a></li>
+            <li><a ng-click="goView('all')">All Reviews</a></li>
+            <li><a ng-click="goView('discussion')">Discussion</a></li>
+            <li><a ng-click="select(null)">&#10006;</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <div ng-include="'/templates/view/tasks_' + curView + '.html'"></div>
+  </div>
+</div>

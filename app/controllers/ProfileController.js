@@ -6,7 +6,14 @@ app.controller('ProfileController', ['$scope', '$location', 'ProfileServices', f
       $scope.show("Failed");
     });
   }
-  $scope.update=function(){
+  $scope.update = function (fullprofile) {
+    if(fullprofile) {
+      var newdata = $scope.data;
+    } else {
+      var newdata = {
+        'oldpassword': $scope.data.oldpassword,
+        'newpassword': $scope.data.newpassword};
+    }
     ProfileServices.update($scope.data, function(response){
       $scope.show(response.data);
     },function(response){
@@ -45,7 +52,7 @@ app.controller('ProfileController', ['$scope', '$location', 'ProfileServices', f
   }
   $scope.cancel = function()
   {
-    $scope.action();
+    $scope.action(true);
   }
   $scope.passwordcancel = function()
   {
@@ -77,20 +84,20 @@ app.controller('ProfileController', ['$scope', '$location', 'ProfileServices', f
       $scope.old="";
       $scope.new="";
       $scope.newagain="";
-      alert("New Password Repeat is Error.");
+      alert("Confirmation password mismatch.");
       return;
     }
     else
     {
-      $scope.data.flag1=$scope.old;
-      $scope.data.flag2=$scope.new;
-      $scope.update();
+      $scope.data.oldpassword = $scope.old;
+      $scope.data.newpassword = $scope.new;
+      $scope.update(false);
     }
   }
 
   $scope.sele = function()
   {
-    $location.url("Tasks/General?id="+$scope.sel);
+    $location.url("Tasks?id="+$scope.sel);
   }
 
   $scope.sel=0;

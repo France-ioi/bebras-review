@@ -1,0 +1,55 @@
+<div style="border:1px solid; padding:10px; height: 420px">
+    <div class="col-md-6">
+        <label class="pull-left" style="width:140px; clear:both;"> TextID: </label> 
+        <label style="clear:right">{{taskData.textID}}</label><br/>
+        <label class="pull-left" style="width:140px; clear:both;"> Folder name: </label> 
+        <label style="clear:right">{{taskData.folderName}}</label><br/>
+        <label class="pull-left" style="width:140px; clear:both;"> Folder path: </label> 
+        <label style="clear:right">{{taskData.folderPath}}</label><br/>
+        <label class="pull-left" style="width:140px; clear:both;"> Year: </label> 
+        <label style="clear:right">{{taskData.year}}</label><br/>
+        <label class="pull-left" style="width:140px; clear:both;"> Country Code: </label> 
+        <label style="clear:right">{{taskData.country}}</label><br/>
+        <label class="pull-left" style="width:140px; clear:both;"> Creation date: </label> 
+        <label style="clear:right">{{taskData.repositoryDate}}</label><br/>
+        <label class="pull-left" style="width:140px; clear:both;"> Last change: </label> 
+        <label style="clear:right">{{taskData.lastChangeDate}}</label><br/>
+        <label class="pull-left" style="width:140px; clear:both;"> Last SVN update: </label> 
+        <label style="clear:right">{{taskData.importDate}}</label><br/>
+        <label class="pull-left" style="width:140px; clear:both;"> Author/Committer: </label> 
+        <label style="clear:right">{{taskData.ownerName}}</label><br/>
+        <label class="pull-left" style="width:140px; clear:both;"> HTML filename: </label> 
+        <input ng-model="taskData.htmlFileName" style="clear:right; margin-bottom:5px;" ng-readonly="!isAdmin" placeholder="none">
+        <label class="pull-left" style="width:140px; clear:both;"> ODT filename: </label> 
+        <input ng-model="taskData.odtFileName" style="clear:right; margin-bottom:5px;" ng-readonly="!isAdmin" placeholder="none">
+        <label class="pull-left" style="width:140px; clear:both;"> PDF filename: </label> 
+        <input ng-model="taskData.pdfFileName" style="clear:right; margin-bottom:5px;" ng-readonly="!isAdmin" placeholder="none">
+    </div>
+    <div class="col-md-6">
+        <label class="pull-left" style="width:140px; clear:left;"> Assigned Group: </label> 
+        <select style="clear:right; margin-bottom:10px;" ng-model="taskData.assignedGroupID" ng-disabled="!isAdmin">
+            <option ng-repeat="g in groupsList" ng-selected='taskData.assignedGroupID == g.ID' ng-value="g.ID">{{g.name}}</option>
+        </select><br/>
+        <label class="pull-left" style="width:140px; clear:left;"> Status: </label> 
+        <select style="clear:right; margin-bottom:10px;" ng-model="taskData.status" ng-disabled="!isAdmin && !taskData.groupadminflag">
+            <option ng-selected='taskData.status=="Proposed"'>Proposed</option>
+            <option ng-selected='taskData.status=="Accepted"'>Accepted</option>
+            <option ng-selected='taskData.status=="Recommended"'>Recommended</option>
+            <option ng-selected='taskData.status=="Rejected"'>Rejected</option>
+        </select><br/>
+        <label class="pull-left" style="width:140px; clear:left;"> Status comment: </label> 
+        <textarea ng-model="taskData.statusComment" style="clear:right; margin-bottom:5px;" ng-readonly="!isAdmin && !taskData.groupadminflag"></textarea><br/>
+        <div ng-if="taskData.Reviews > 0">
+            <label class="pull-left" style="width:140px; clear:left;"> Number of reviews: </label> 
+            <label style="clear:right">{{taskData.Reviews}}</label><br/>
+            <label class="pull-left" style="width:140px; clear:left;"> Average as of now: </label> 
+            <div star-rating rating-value="taskData.ar" rating-readonly="true"></div>
+            <label class="pull-left" style="width:140px; clear:left;"> Average potential: </label> 
+            <div star-rating rating-value="taskData.p" rating-readonly="true"></div><br />
+        </div>
+        <div ng-if="taskData.Reviews == 0">
+            <b><i>No reviews yet.</i></b>
+        </div>
+        <button ng-click="lastsave(taskData)" class="btn btn-primary pull-right" style="clear:right" ng-if="isAdmin || taskData.groupadminflag">Save</button>
+    </div>
+</div>

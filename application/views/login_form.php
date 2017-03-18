@@ -6,7 +6,7 @@ header("location:". base_url()."user_auth/user_login_process");
 }
 ?>
 <head>
-	<title>Login Form</title>
+	<title>Welcome to Bebras Review</title>
 	<link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>assets/style/style.css">
 	<link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro|Open+Sans+Condensed:300|Raleway' rel='stylesheet' type='text/css'>
 </head>
@@ -27,7 +27,7 @@ header("location:". base_url()."user_auth/user_login_process");
 	?>
 	<div id="main">
 		<div id="login">
-			<h2>Login Form</h2>
+			<h2>Welcome to Bebras Review</h2>
 			<hr/>
 			<?php echo form_open('user_auth/user_login_process'); ?>
 			<?php
@@ -38,12 +38,12 @@ header("location:". base_url()."user_auth/user_login_process");
 			echo validation_errors();
 			echo "</div>";
 			?>
-			<label>UserName :</label>
+			<label>Username :</label>
 			<input type="text" name="username" id="name" placeholder="username"/><br /><br />
 			<label>Password :</label>
 			<input type="password" name="password" id="password" placeholder="**********"/><br/><br />
-			<input type="submit" value=" Login " name="submit"/><br />
-			<a href="<?php echo base_url() ?>user_auth/user_registration_show">To SignUp Click Here</a>
+			<input type="submit" value="Login" name="submit"/><br />
+			<a href="<?php echo base_url() ?>user_auth/user_registration_show">Register</a>
 			<?php echo form_close(); ?>
 		</div>
 	</div>

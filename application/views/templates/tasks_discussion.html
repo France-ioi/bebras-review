@@ -1,0 +1,28 @@
+<div ng-repeat="x in messagesList" ng-if="x.folderName == sel" class="row" style="margin:0;">
+    <div style="border-radius: 20px; width:85%; margin:5px; padding:10px; height:140px; " class="row" ng-style="{'float':((x['flagAuthor']==true)?'right':'left'), 'border': (x['flag']? '5px solid' : '1px solid')}">
+        <div class="col-md-2" style="text-align: center;">
+            <span> {{x.author}} </span>
+            <br/>
+            <span> {{x.dateModified}} </span>
+            <span ng-if="x['flag']" class="label label-default">You</span>
+            <span ng-if="x['flagAuthor']" class="label label-success">Author</span>
+            <button ng-click="changemess(x.ID,x.content)" ng-show="((x['flagModify']==true)?true:false)" class="btn btn-info btn-xs" style="margin:10px;">Edit</button>
+        </div>
+        <div class="col-md-10">
+            <textarea ng-readonly="((x['flagModify']==true)?false:true)"  style="width:100%; height:100%;  border:0;" ng-model="x.content"></textarea>
+        </div>
+    </div>
+</div>
+<div class="row" style="margin:0;">
+    <div style="border-radius: 20px; border:1px solid; width:85%;  float:left; margin:5px; padding:10px; height: 140px;">
+        <div class="col-md-2" style="padding:0;" align="center">
+            <span> Your message: </span>
+            <br/>
+            <br/>
+            <button class="btn btn-primary btn-xs" ng-click="messagesend()">Send</button>
+        </div>
+        <div class="col-md-10">
+            <textarea id="newMessage" style="width:100%; padding:10px; height:100%;"></textarea>
+        </div>
+    </div>  
+</div>

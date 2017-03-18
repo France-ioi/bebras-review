@@ -7,7 +7,8 @@ app.directive('starRating', function () {
             '</li>' +
             '</ul>',
         scope: {
-            ratingValue: '='
+            ratingValue: '=',
+            ratingReadonly: '='
         },
         link: function (scope, elem, attrs) {
 
@@ -21,7 +22,9 @@ app.directive('starRating', function () {
             };
 
             scope.toggle = function (index) {
-                scope.ratingValue = index + 1;
+                if(!scope.ratingReadonly) {
+                    scope.ratingValue = index + 1;
+                }
             };
 
             scope.$watch('ratingValue', function (oldVal, newVal) {

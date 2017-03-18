@@ -41,14 +41,6 @@ header("location: login");
 	<script src="<?php echo base_url(); ?>app/services/ReviewsServices.js"></script>
 	<script src="<?php echo base_url(); ?>app/services/UsersServices.js"></script>
 	<script src="<?php echo base_url(); ?>app/services/ProfileServices.js"></script>
-	<script src="<?php echo base_url(); ?>app/services/GeneralServices.js"></script>
-	<script src="<?php echo base_url(); ?>app/services/HtmlServices.js"></script>
-	<script src="<?php echo base_url(); ?>app/services/OdtServices.js"></script>
-	<script src="<?php echo base_url(); ?>app/services/PDFServices.js"></script>
-	<script src="<?php echo base_url(); ?>app/services/YourServices.js"></script>
-	<script src="<?php echo base_url(); ?>app/services/AllServices.js"></script>
-	<script src="<?php echo base_url(); ?>app/services/DiscussionServices.js"></script>
-	<script src="<?php echo base_url(); ?>app/services/TasklistServices.js"></script>
 	<script src="<?php echo base_url(); ?>app/helper/myHelper.js"></script>
 
 	<!-- App Controller -->
@@ -57,13 +49,6 @@ header("location: login");
 	<script src="<?php echo base_url(); ?>app/controllers/ReviewsController.js"></script>
 	<script src="<?php echo base_url(); ?>app/controllers/UsersController.js"></script>
 	<script src="<?php echo base_url(); ?>app/controllers/ProfileController.js"></script>
-	<script src="<?php echo base_url(); ?>app/controllers/GeneralController.js"></script>
-	<script src="<?php echo base_url(); ?>app/controllers/HtmlController.js"></script>
-	<script src="<?php echo base_url(); ?>app/controllers/OdtController.js"></script>
-	<script src="<?php echo base_url(); ?>app/controllers/PDFController.js"></script>
-	<script src="<?php echo base_url(); ?>app/controllers/YourController.js"></script>
-	<script src="<?php echo base_url(); ?>app/controllers/AllController.js"></script>
-	<script src="<?php echo base_url(); ?>app/controllers/DiscussionController.js"></script>
 
 	<style>
 		table {
