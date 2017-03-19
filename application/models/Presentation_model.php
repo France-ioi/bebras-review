@@ -47,11 +47,12 @@ class presentation_model extends CI_Model {
                 $result[$i]['groupadminflag'] = true;
             }
 
-			$review = $this->db->get_where('reviews', 'taskID = '.$result[$i]['ID'].' AND currentRating > 0 AND potentialRating > 0');
+			$review = $this->db->get_where('reviews', 'taskID = '.$result[$i]['ID']);
 			$result[$i]['Reviews']=$review->num_rows();
 			$reviewresult=$review->result_array();
-			$sum1=0;
-			$sum2=0;
+			$sum1 = 0;
+			$sum2 = 0;
+            $nbreviews = 0;
 
             $result[$i]['reviewers'] = Array();
 			for($j=0;$j<$review->num_rows();$j++)
@@ -59,17 +60,19 @@ class presentation_model extends CI_Model {
                 if($reviewresult[$j]['isAssigned'] == 1) {
                     $result[$i]['reviewers'][$reviewresult[$j]['userID']] = $userID_to_name[$reviewresult[$j]['userID']];
                 }
-				$sum1+=$reviewresult[$j]['currentRating'];
-				$sum2+=$reviewresult[$j]['potentialRating'];
+                if($reviewresult[$j]['currentRating'] > 0 && $reviewresult[$j]['potentialRating'] > 0) {
+                  $sum1 += $reviewresult[$j]['currentRating'];
+                  $sum2 += $reviewresult[$j]['potentialRating'];
+                  $nbreviews = 0;
+                }
 			}
-			if($review->num_rows()>0)
-				$result[$i]['ar']=number_format($sum1/$review->num_rows(),1);
-			else
-				$result[$i]['ar']=0;
-			if($review->num_rows()>0)
-				$result[$i]['p']=number_format($sum2/$review->num_rows(),1);
-			else
-				$result[$i]['p']=0;
+            if($nbreviews > 0) {
+              $result[$i]['ar'] = number_format($sum1/$nbreviews,1);
+              $result[$i]['p'] = number_format($sum2/$nbreviews,1);
+            } else {
+              $result[$i]['ar'] = 0;
+              $result[$i]['p'] = 0;
+            }
 
 			if($result[$i]['htmlFileName']) {
 			    $result[$i]['htmlLink'] = $this->config->item('svn_reldir') . $result[$i]['folderPath'] . '/' . $result[$i]['folderName'] . '/' . $result[$i]['htmlFileName'];
