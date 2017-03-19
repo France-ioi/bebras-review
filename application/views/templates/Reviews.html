@@ -36,7 +36,7 @@
     </select>
 </div>
 <div class="col-md-9" style="border:1px solid; padding:0px; height: 100%; overflow-y: scroll;">
-    <div ng-repeat="x in data | orderBy : myOrderBy" ng-show="(au=='0'||x.author==au)&&(ye=='0'||x.year==ye)&&(co=='0'||x.countryCode==co)&&(gr=='0'||x.Group==gr)" style="clear:both; border-radius: 5px; border:1px solid; margin:10px; padding:10px; height:30%;">
+    <div ng-repeat="x in data | orderBy : myOrderBy" ng-show="(au=='0'||x.author==au)&&(ye=='0'||x.year==ye)&&(co=='0'||x.country==co)&&(gr=='0'||x.Group==gr)" style="clear:both; border-radius: 5px; border:1px solid; margin:10px; padding:10px; height:30%;">
         <div class="top">
             <label style="width:90px">Review by:</label>
             <label style="width:160px"> {{x.author}}</label>

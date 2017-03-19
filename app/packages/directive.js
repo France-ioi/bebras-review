@@ -24,6 +24,7 @@ app.directive('starRating', function () {
             scope.toggle = function (index) {
                 if(!scope.ratingReadonly) {
                     scope.ratingValue = index + 1;
+                    updateStars();
                 }
             };
 
@@ -32,6 +33,8 @@ app.directive('starRating', function () {
                     updateStars();
                 }
             });
+
+            updateStars();
         }
     }
 });

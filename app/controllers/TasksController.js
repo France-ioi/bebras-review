@@ -50,7 +50,8 @@ app.controller('TasksController', ['$scope', '$location', '$sce', 'TasksServices
 
   // Files views
   $scope.toggleflag = false;
-  $scope.autoloadTasks = true;
+  $scope.loadTasks = false;
+  $scope.autoloadTasks = false;
   $scope.httpflag = false;
 
   // For reviews
@@ -89,6 +90,7 @@ app.controller('TasksController', ['$scope', '$location', '$sce', 'TasksServices
 
   $scope.goView = function(newView) {
     $scope.listMode = false;
+    $scope.loadTasks = $scope.autoloadTasks;
     $scope.curView = newView;
   }
 
@@ -180,7 +182,8 @@ app.controller('TasksController', ['$scope', '$location', '$sce', 'TasksServices
       } else {
         $scope.select(null);
       }
-
+    } else {
+      $scope.select($scope.sel);
     }
   }
 
@@ -199,6 +202,7 @@ app.controller('TasksController', ['$scope', '$location', '$sce', 'TasksServices
   $scope.chgReview = function(id,a,b ,comment)
   {
     TasksServices.reviewchange(id, a,b,comment, function(response){
+      $scope.getTasks();
     }, function(response){
     });
   }
@@ -234,6 +238,10 @@ app.controller('TasksController', ['$scope', '$location', '$sce', 'TasksServices
       $scope.loadData(response.data);
     },function(response){
     });
+  }
+
+  $scope.loadchange = function () {
+    $scope.loadTasks = true;
   }
 
   $scope.$watch('sel', $scope.select);

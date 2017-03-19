@@ -1,5 +1,6 @@
 <?php
 // TODO :: Rewrite all requests to use actual JOINs
+// TODO :: clean up code
 
 class presentation_model extends CI_Model {
 	public function __construct()
@@ -46,7 +47,7 @@ class presentation_model extends CI_Model {
                 $result[$i]['groupadminflag'] = true;
             }
 
-			$review = $this->db->get_where('reviews',array('taskID'=>$result[$i]['ID']));
+			$review = $this->db->get_where('reviews', 'taskID = '.$result[$i]['ID'].' AND currentRating > 0 AND potentialRating > 0');
 			$result[$i]['Reviews']=$review->num_rows();
 			$reviewresult=$review->result_array();
 			$sum1=0;
@@ -136,7 +137,7 @@ class presentation_model extends CI_Model {
 	}
 	public function getreviews()
 	{
-		$reviews = $this->db->get('reviews');
+		$reviews = $this->db->get_where('reviews', 'currentRating > 0 AND potentialRating > 0');
 		$result = $reviews->result_array();
 		for($i=0;$i<$reviews->num_rows();$i++)
 		{
@@ -389,7 +390,7 @@ class presentation_model extends CI_Model {
 		$re=array();
 		for($i=0;$i<$count;$i++)
 		{
-			$reviews = $this->db->get_where('reviews', array('taskID'=>$result[$i]['ID']));
+			$reviews = $this->db->get_where('reviews', 'taskID = '.$result[$i]['ID'].' AND currentRating > 0 AND potentialRating > 0');
 			$co = $reviews->num_rows();
 			$list=$reviews->result_array();
 			$sum1=0;
