@@ -13,9 +13,9 @@
                 <label style="width:90px">Review date:</label>
                 <label style="width:80px">{{y.initialReviewDate}} </label><br/>
                 <label style="width:90px">As of now:</label>
-                <div star-rating rating-value="y.currentRating" style="display:inline;"></div>
+                <div star-rating rating-value="y.currentRating" rating-readonly="true" style="display:inline;"></div>
                 <label style="width:90px">Potential:</label>
-                <div star-rating rating-value="y.potentialRating" style="display:inline;"></div>
+                <div star-rating rating-value="y.potentialRating" rating-readonly="true" style="display:inline;"></div>
             </div>
             <div class="col-md-8">
                 <textarea readonly style="width:100%; height:100%; border:0;  outline:0;">{{y.comment}}</textarea>
