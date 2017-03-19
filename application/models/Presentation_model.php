@@ -48,7 +48,6 @@ class presentation_model extends CI_Model {
             }
 
 			$review = $this->db->get_where('reviews', 'taskID = '.$result[$i]['ID']);
-			$result[$i]['Reviews']=$review->num_rows();
 			$reviewresult=$review->result_array();
 			$sum1 = 0;
 			$sum2 = 0;
@@ -63,7 +62,7 @@ class presentation_model extends CI_Model {
                 if($reviewresult[$j]['currentRating'] > 0 && $reviewresult[$j]['potentialRating'] > 0) {
                   $sum1 += $reviewresult[$j]['currentRating'];
                   $sum2 += $reviewresult[$j]['potentialRating'];
-                  $nbreviews = 0;
+                  $nbreviews += 1;
                 }
 			}
             if($nbreviews > 0) {
@@ -73,6 +72,7 @@ class presentation_model extends CI_Model {
               $result[$i]['ar'] = 0;
               $result[$i]['p'] = 0;
             }
+			$result[$i]['Reviews'] = $nbreviews;
 
 			if($result[$i]['htmlFileName']) {
 			    $result[$i]['htmlLink'] = $this->config->item('svn_reldir') . $result[$i]['folderPath'] . '/' . $result[$i]['folderName'] . '/' . $result[$i]['htmlFileName'];
@@ -376,13 +376,21 @@ class presentation_model extends CI_Model {
 	}
 	public function reviewchange()
 	{
-		$this->db->update('reviews',array(
-                'comment'=>$_POST['comment'],
-    		    'currentRating'=>$_POST['a'],
-    		    'potentialRating'=>$_POST['b'],
-    		    'lastChangeReviewDate'=>date('y-m-d')),
-            array('ID'=>$_POST['id']));
-		return true;
+        $review = $this->db->get_where('reviews', array('ID' => $_POST['id']));
+        if($review->num_rows() > 0) {
+          $data = array(
+            'comment'=>$_POST['comment'],
+            'currentRating'=>$_POST['a'],
+            'potentialRating'=>$_POST['b'],
+            'lastChangeReviewDate'=>date('y-m-d'));
+          if($review->result_array()[0]['initialReviewDate'] == '0000-00-00') {
+            $data['initialReviewDate'] = date('y-m-d');
+          }
+          $this->db->update('reviews', $data, array('ID'=>$_POST['id']));
+		  return true;
+        } else {
+          return false;
+        }
 	}
 
 	public function getall()
