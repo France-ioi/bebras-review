@@ -9,8 +9,8 @@
             <label class="pull-left" style="width:220px;"> SVN login: </label>
             <input type="text" ng-model="data.svnLogin" style="clear:right"><br/>
             <label class="pull-left" style="width:220px;"> Country: </label>
-            <select style="clear:right">
-                <option value="{{data.countryCode}}">{{data.countryCode}}</option>>
+            <select ng-model="data.countryCode" style="clear:right">
+                <option ng-repeat="c in countryList" value="{{c.code}}" ng-selected="data.countryCode == c.code">{{c.name}}</option>
             </select><br/>
             <label class="pull-left" style="width:220px;"> Auto-load task: </label>
             <!--<div toggle-switch class="switch-large switch-off" ng-model="data.autoLoadTasks"></div><br/>-->
@@ -31,11 +31,11 @@
         <fieldset style="border-width: 2px; border-style: solid; border-color: threedface; padding:10px;">
             <legend style="width:initial; border:0; margin:0;">Password Change</legend>
             <label class="pull-left" style="width:220px;"> Old password </label>
-            <input type="password" ng-model="old"><br/>
+            <input type="password" ng-model="passwords.oldp"><br/>
             <label class="pull-left" style="width:220px;"> New password </label>
-            <input type="password" ng-model="new"><br/>
+            <input type="password" ng-model="passwords.newp"><br/>
             <label class="pull-left" style="width:220px;"> New password (again): </label>
-            <input type="password" ng-model="newagain"><br/>
+            <input type="password" ng-model="passwords.newpagain"><br/>
             <button ng-click="passwordsave()" class="btn btn-primary pull-right" style="clear:right">Save</button>
             <button ng-click="passwordcancel()" class="btn btn-danger pull-right">Cancel</button>
         </fieldset>

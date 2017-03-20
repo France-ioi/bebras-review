@@ -78,7 +78,6 @@ public function user_login_process() {
 		'username' => $this->input->post('username'),
 		'password' => $this->input->post('password')
 	);
-    error_log(md5($this->input->post('password')));
 	$result = $this->login_database->login($data);
 	if ($result == 'ok') {
 		$username = $this->input->post('username');

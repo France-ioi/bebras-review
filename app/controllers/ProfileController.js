@@ -33,14 +33,17 @@ app.controller('ProfileController', ['$scope', '$location', 'ProfileServices', f
     $scope.list=data;
   }
   $scope.data="loading";
-  $scope.old="";
-  $scope.new="";
-  $scope.newagain="";
-  $scope.list;
+  $scope.passwords = {
+    oldp: '',
+    newp: '',
+    newpagain: ''};
+  $scope.list = [];
+  $scope.countryList = [];
   $scope.show = function(data)
   {
-    $scope.data=data;
-    $scope.data.autoLoadTasks=((data.autoLoadTasks=="false")?false:true);
+    $scope.data = data.profile;
+    $scope.countryList = data.countryList;
+    $scope.data.autoLoadTasks=((data.profile.autoLoadTasks=="false")?false:true);
     $scope.listtasks(data.ID);
   }
 
@@ -56,41 +59,34 @@ app.controller('ProfileController', ['$scope', '$location', 'ProfileServices', f
   }
   $scope.passwordcancel = function()
   {
-    $scope.old="";
-    $scope.new="";
-    $scope.newagain="";
+    $scope.passwords.oldp = "";
+    $scope.passwords.newp = "";
+    $scope.passwords.newpagain = "";
   }
   $scope.passwordsave = function()
   {
-    //if($scope.old==$scope.data.password&&$scope.new==$scope.newagain)
-    if($scope.old=="")
+    if($scope.passwords.oldp=="")
     {
-      $scope.old="";
-      $scope.new="";
-      $scope.newagain="";
       alert("Old password is empty.");
       return;
     }
-    if($scope.new=="")
+    if($scope.passwords.newp=="")
     {
-      $scope.old="";
-      $scope.new="";
-      $scope.newagain="";
       alert("New password is empty.");
       return;
     }
-    if($scope.new!=$scope.newagain)
+    if($scope.passwords.newp != $scope.passwords.newpagain)
     {
-      $scope.old="";
-      $scope.new="";
-      $scope.newagain="";
       alert("Confirmation password mismatch.");
       return;
     }
     else
     {
-      $scope.data.oldpassword = $scope.old;
-      $scope.data.newpassword = $scope.new;
+      $scope.data.oldpassword = $scope.passwords.oldp;
+      $scope.data.newpassword = $scope.passwords.newp;
+      $scope.passwords.oldp = "";
+      $scope.passwords.newp = "";
+      $scope.passwords.newpagain = "";
       $scope.update(false);
     }
   }
