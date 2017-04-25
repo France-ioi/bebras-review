@@ -19,6 +19,10 @@
 			echo validation_errors();
 			echo "</div>";
 			echo form_open('user_auth/new_user_registration');
+            echo "<div class='error_msg'>";
+            echo "Local account creation is only for very specific cases, and must be approved by an administration; if you already have a SVN account, please use it to log in.";
+            echo "</div>";
+            echo "<hr/>";
 
 			echo form_label('Username : ');
 			echo "<br/>";

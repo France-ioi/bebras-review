@@ -64,45 +64,50 @@ public function new_user_registration() {
 
 // Check for user login process
 public function user_login_process() {
-	$this->form_validation->set_rules('username', 'Username', 'trim|required');
-	$this->form_validation->set_rules('password', 'Password', 'trim|required');
+    $this->form_validation->set_rules('username', 'Username', 'trim|required');
+    $this->form_validation->set_rules('password', 'Password', 'trim|required');
 
-	if ($this->form_validation->run() == FALSE) {
-		if(isset($this->session->userdata['logged_in'])){
-			$this->load->view('welcome_message');
-		}else{
-			$this->load->view('login_form');
-		}
-	} else {
-	$data = array(
-		'username' => $this->input->post('username'),
-		'password' => $this->input->post('password')
-	);
-	$result = $this->login_database->login($data);
-	if ($result == 'ok') {
-		$username = $this->input->post('username');
-		$result = $this->login_database->read_user_information($username);
-		if ($result != 	false) {
-			$session_data = array(
-				'username' => $result[0]->username,
-				'username1' => $result[0]->lastName, // TODO :: add more data
-				'email' => $result[0]->email,
-			);
-			// Add user data in session
-			$this->session->set_userdata('logged_in', $session_data);
-			$this->load->view('welcome_message');
-		}
-	} elseif ($result == 'invalid') {
-		$data = array(
-			'error_message' => 'Invalid username or password'
-		);
-		$this->load->view('login_form', $data);
-	} elseif ($result == 'unconfirmed') {
-		$data = array(
-			'error_message' => 'User has not been confirmed by an admin yet'
-		);
-		$this->load->view('login_form', $data);
-	}
+    if ($this->form_validation->run() == FALSE) {
+        if(isset($this->session->userdata['logged_in'])){
+            $this->load->view('welcome_message');
+        }else{
+            $this->load->view('login_form');
+        }
+    } else {
+        $data = array(
+            'username' => $this->input->post('username'),
+            'password' => $this->input->post('password')
+        );
+        $result = $this->login_database->login($data);
+        if ($result == 'ok') {
+            $username = $this->input->post('username');
+            $result = $this->login_database->read_user_information($username);
+            if ($result !=     false) {
+                $session_data = array(
+                    'username' => $result[0]->username,
+                    'username1' => $result[0]->lastName, // TODO :: add more data
+                    'email' => $result[0]->email,
+                );
+                // Add user data in session
+                $this->session->set_userdata('logged_in', $session_data);
+                $this->load->view('welcome_message');
+            }
+        } elseif ($result == 'create_error') {
+            $data = array(
+                'error_message' => 'Error while registering SVN user. Please contact an administrator.'
+            );
+            $this->load->view('login_form', $data);
+        } elseif ($result == 'invalid') {
+            $data = array(
+                'error_message' => 'Invalid username or password'
+            );
+            $this->load->view('login_form', $data);
+        } elseif ($result == 'unconfirmed') {
+            $data = array(
+                'error_message' => 'User has not been confirmed by an admin yet'
+            );
+            $this->load->view('login_form', $data);
+        }
     }
 }
 

@@ -108,6 +108,7 @@ CREATE TABLE `users` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
   `username` text NOT NULL,
   `svnLogin` text NOT NULL,
+  `fromSvn` BOOLEAN NOT NULL DEFAULT FALSE,
   `firstName` text NOT NULL,
   `lastName` text NOT NULL,
   `email` text NOT NULL,
