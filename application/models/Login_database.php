@@ -15,7 +15,7 @@ Class Login_Database extends CI_Model {
 			$data['salt'] = md5(time());
             $data['password'] = md5($data['password'] . $data['salt']);
 
-			$data['countryCode']="France";
+			$data['countryCode'] = '';
 			$data['registrationDate']=date('y-m-d');
 			$data['LastLoginDate']=date('y-m-d');
 			$data['groupID']='1';
@@ -67,7 +67,7 @@ Class Login_Database extends CI_Model {
                 $data['firstName'] = $data['username'];
                 $data['lastName'] = '';
                 $data['email'] = '';
-			    $data['role'] = 'Membre';
+			    $data['role'] = 'Member';
                 $data['svnLogin'] = $data['username'];
                 $data['fromSvn'] = true;
                 if($this->registration_insert($data)) {
