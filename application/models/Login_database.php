@@ -40,34 +40,42 @@ Class Login_Database extends CI_Model {
 		return false;
 	}
 
-	// Read data using username and password
-	public function login($data) {
+    // Read data using username and password
+    public function login($data) {
         $query = $this->db->get_where('users',array('username' => $data['username']));
 
-		if ($query->num_rows() == 1) {
+        if ($query->num_rows() == 1) {
             $result = $query->result_array()[0];
             $hashed_password = md5($data['password'] . $result['salt']);
-            if($result['password'] != $hashed_password) {
-                return 'invalid';
-            } elseif($result['role'] == 'Unconfirmed') {
-                return 'unconfirmed';
-            } else {
-                $this->db->update('users', array('lastLoginDate' => date('y-m-d')), array('ID' => $result['ID']));
-    			return 'ok';
+            if($result['password'] == $hashed_password) {
+                if($result['role'] == 'Unconfirmed') {
+                    return 'unconfirmed';
+                } else {
+                    $this->db->update('users', array('lastLoginDate' => date('y-m-d')), array('ID' => $result['ID']));
+                    return 'ok';
+                }
             }
-		} else {
-            // Try to log into SVN
-            svn_auth_set_parameter(SVN_AUTH_PARAM_DEFAULT_USERNAME,             $data['username']);
-            svn_auth_set_parameter(SVN_AUTH_PARAM_DEFAULT_PASSWORD,             $data['password']);
-            svn_auth_set_parameter(PHP_SVN_AUTH_PARAM_IGNORE_SSL_VERIFY_ERRORS, true); // <--- Important for certificate issues!
-            svn_auth_set_parameter(SVN_AUTH_PARAM_NON_INTERACTIVE,              true);
-            svn_auth_set_parameter(SVN_AUTH_PARAM_NO_AUTH_CACHE,                true);
+        }
 
-            if(@svn_ls($this->config->item('svn_remote'))) {
+        // User not found or password incorrect, try to log into SVN
+        svn_auth_set_parameter(SVN_AUTH_PARAM_DEFAULT_USERNAME,             $data['username']);
+        svn_auth_set_parameter(SVN_AUTH_PARAM_DEFAULT_PASSWORD,             $data['password']);
+        svn_auth_set_parameter(PHP_SVN_AUTH_PARAM_IGNORE_SSL_VERIFY_ERRORS, true); // <--- Important for certificate issues!
+        svn_auth_set_parameter(SVN_AUTH_PARAM_NON_INTERACTIVE,              true);
+        svn_auth_set_parameter(SVN_AUTH_PARAM_NO_AUTH_CACHE,                true);
+
+        if(@svn_ls($this->config->item('svn_remote'))) {
+            if($query->num_rows() == 1) {
+                // Update password
+                $salt = md5(time());
+                $this->db->update('users', array('salt' => $salt, 'password' => md5($data['password'] . $data['salt'])), array('username' => $username));
+                return 'ok';
+            } else {
+                // Create new user automatically
                 $data['firstName'] = $data['username'];
                 $data['lastName'] = '';
                 $data['email'] = '';
-			    $data['role'] = 'Member';
+                $data['role'] = 'Member';
                 $data['svnLogin'] = $data['username'];
                 $data['fromSvn'] = true;
                 if($this->registration_insert($data)) {
@@ -77,12 +85,12 @@ Class Login_Database extends CI_Model {
                     // Error while creating
                     return 'create_error';
                 }
-            } else {
-                // User doesn't exist in database nor on SVN
-                return 'invalid';
             }
-		}
-	}
+        } else {
+            // User doesn't exist in database nor on SVN
+            return 'invalid';
+        }
+    }
 
 	// Read data from database to show data in admin page
 	public function read_user_information($username)
