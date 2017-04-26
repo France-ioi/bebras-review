@@ -644,6 +644,11 @@ class presentation_model extends CI_Model {
         svn_auth_set_parameter(SVN_AUTH_PARAM_NON_INTERACTIVE,              true);
         svn_auth_set_parameter(SVN_AUTH_PARAM_NO_AUTH_CACHE,                true);
 
+        // Modules are folders to update without scanning them for tasks
+        foreach($this->config->item('svn_modules') as $subdir) {
+            $newRev = svn_update($this->config->item('svn_basedir') + $subdir);
+        }
+
         foreach($this->config->item('svn_subdirs') as $subdir) {
             $newRev = svn_update($this->config->item('svn_basedir') + $subdir);
             $this->recupdatesvn($this->config->item('svn_basedir'), $subdir);
