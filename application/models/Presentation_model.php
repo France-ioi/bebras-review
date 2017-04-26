@@ -646,11 +646,13 @@ class presentation_model extends CI_Model {
 
         // Modules are folders to update without scanning them for tasks
         foreach($this->config->item('svn_modules') as $subdir) {
-            $newRev = svn_update($this->config->item('svn_basedir') + $subdir);
+            $newRev = svn_update($this->config->item('svn_basedir') . $subdir);
         }
 
         foreach($this->config->item('svn_subdirs') as $subdir) {
-            $newRev = svn_update($this->config->item('svn_basedir') + $subdir);
+            $newRev = svn_update($this->config->item('svn_basedir') . $subdir);
+            // TODO :: return something, such as for instance success or
+            // failure ($newRev > -1) and/or how many tasks were detected
             $this->recupdatesvn($this->config->item('svn_basedir'), $subdir);
         }
 	}
