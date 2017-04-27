@@ -1,11 +1,11 @@
 <div ng-if="hasReviews[sel]" class="col-md-6">
     <label class="pull-left" style="width:200px;"> Your rating as of now: </label>
-    <div star-rating rating-value="taskData.currentRating"></div>
+    <div star-rating rating-value="taskData.currentRating" ng-click="reviewChanged()"></div>
     <label class="pull-left" style="width:200px;"> Your rating of the potential: </label>
-    <div star-rating rating-value="taskData.potentialRating"></div>
+    <div star-rating rating-value="taskData.potentialRating" ng-click="reviewChanged()"></div>
     <label class="pull-left" style="width:200px;"> Review details: </label><br/>
-    <textarea class="pull-left"  style="clear:left; width:400px; height:150px;" ng-model="taskData.reviewComment"></textarea>
-    <button ng-click="chgReview(taskData.reviewId,taskData.currentRating,taskData.potentialRating,taskData.reviewComment)" style="clear:both; margin:10px; float:right;" class="btn btn-primary">Save</button>
+    <textarea class="pull-left"  style="clear:left; width:400px; height:150px;" ng-model="taskData.reviewComment" ng-change="reviewChanged()"></textarea>
+    <button id="reviewSaveBtn" ng-click="chgReview(taskData.reviewId,taskData.currentRating,taskData.potentialRating,taskData.reviewComment)" style="clear:both; margin:10px; float:right;" class="btn btn-primary">Save</button>
 </div>
 <div ng-if="!hasReviews[sel]">
     You haven't been assigned this task for review.

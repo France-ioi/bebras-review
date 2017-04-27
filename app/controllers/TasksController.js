@@ -67,7 +67,7 @@ app.controller('TasksController', ['$scope', '$location', '$sce', 'TasksServices
           $scope.taskData = $scope.tasksList[i];
           for(var i=0; i<$scope.reviewsList.length; i++) {
             var curReview = $scope.reviewsList[i];
-            if($scope.taskData.folderName == curReview.folderName) {
+            if(curReview.isMine && $scope.taskData.folderName == curReview.folderName) {
               $scope.taskData.currentRating = curReview.currentRating;
               $scope.taskData.potentialRating = curReview.potentialRating;
               $scope.taskData.reviewId = curReview.ID;
@@ -171,7 +171,9 @@ app.controller('TasksController', ['$scope', '$location', '$sce', 'TasksServices
     $scope.httpflag = (data.localCheckoutFolder.substring(0,4) == 'http');
 
     for(var i=0; i<$scope.reviewsList.length; i++) {
-      $scope.hasReviews[$scope.reviewsList[i].folderName] = true;
+      if($scope.reviewsList[i].isMine) {
+        $scope.hasReviews[$scope.reviewsList[i].folderName] = true;
+      }
     }
 
     if(initial) {
@@ -199,9 +201,19 @@ app.controller('TasksController', ['$scope', '$location', '$sce', 'TasksServices
     });
   }
 
+  $scope.reviewChanged = function () {
+    $('#reviewSaveBtn').text('Save').removeClass('btn-success').addClass('btn-primary');
+  };
+
   $scope.chgReview = function(id,a,b ,comment)
   {
-    TasksServices.reviewchange(id, a,b,comment, function(response){
+    var btn = $('#reviewSaveBtn');
+    btn.stop(true, true);
+    btn.removeClass('btn-success').addClass('btn-primary');
+    btn.text('Saving...');
+    TasksServices.reviewchange(id, a,b,comment, function(response) {
+      btn.text('Saved!');
+      btn.removeClass('btn-primary').addClass('btn-success');
       $scope.getTasks();
     }, function(response){
     });

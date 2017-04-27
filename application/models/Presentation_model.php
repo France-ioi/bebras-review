@@ -113,6 +113,7 @@ class presentation_model extends CI_Model {
 		for($i=0;$i<$reviews->num_rows();$i++)
 		{
 			$tasks = $this->db->get_where('tasks',array('ID'=>$result[$i]['taskID']))->result_array();
+            $result[$i]['isMine'] = ($selfuser['ID'] == $result[$i]['userID']);
 			$result[$i]['folderName']=$tasks[0]['folderName'];
 			$result[$i]['year']=$tasks[0]['year'];
 			$result[$i]['countryCode']=$tasks[0]['countryCode'];
