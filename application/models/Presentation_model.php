@@ -384,17 +384,28 @@ class presentation_model extends CI_Model {
 	}
 	public function reviewchange()
 	{
+        $username = ($this->session->userdata['logged_in']['username']);
+        $user = $this->db->get_where('users',array('username'=>$username))->result_array()[0];
+        $cond = array('ID' => $_POST['id']);
+        if($user['role'] != 'Admin') {
+          $cond['userID'] = $user['ID'];
+        }
         $review = $this->db->get_where('reviews', array('ID' => $_POST['id']));
         if($review->num_rows() > 0) {
-          $data = array(
-            'comment'=>$_POST['comment'],
-            'currentRating'=>$_POST['a'],
-            'potentialRating'=>$_POST['b'],
-            'lastChangeReviewDate'=>date('y-m-d'));
-          if($review->result_array()[0]['initialReviewDate'] == '0000-00-00') {
-            $data['initialReviewDate'] = date('y-m-d');
+          $curReview = $review->result_array()[0];
+          if($curReview['isAssigned'] == '0' && $_POST['a'] == '-1' && $_POST['b'] == '-1') {
+            $this->db->delete('reviews', array('ID' => $curReview['ID']));
+          } else {
+            $data = array(
+              'comment' => $_POST['comment'],
+              'currentRating' => max(0, $_POST['a']),
+              'potentialRating'=> max(0, $_POST['b']),
+              'lastChangeReviewDate'=>date('y-m-d'));
+            if($review->result_array()[0]['initialReviewDate'] == '0000-00-00') {
+              $data['initialReviewDate'] = date('y-m-d');
+            }
+            $this->db->update('reviews', $data, array('ID'=>$_POST['id']));
           }
-          $this->db->update('reviews', $data, array('ID'=>$_POST['id']));
 		  return true;
         } else {
           return false;
@@ -484,7 +495,9 @@ class presentation_model extends CI_Model {
 
 	public function profilelisttasks()
 	{
-		$review = $this->db->get_where('reviews',array('userID'=>$_POST['data'],'isAssigned'=>1));
+        $username = ($this->session->userdata['logged_in']['username']);
+        $user = $this->db->get_where('users',array('username'=>$username))->result_array()[0];
+		$review = $this->db->get_where('reviews',array('userID'=>$user['ID'],'isAssigned'=>1));
 		$count = $review->num_rows();
 		$result = $review->result_array();
 		$re=array();

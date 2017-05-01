@@ -170,6 +170,7 @@ app.controller('TasksController', ['$scope', '$location', '$sce', 'TasksServices
 
     $scope.httpflag = (data.localCheckoutFolder.substring(0,4) == 'http');
 
+    $scope.hasReviews = {};
     for(var i=0; i<$scope.reviewsList.length; i++) {
       if($scope.reviewsList[i].isMine) {
         $scope.hasReviews[$scope.reviewsList[i].folderName] = true;
@@ -203,6 +204,10 @@ app.controller('TasksController', ['$scope', '$location', '$sce', 'TasksServices
 
   $scope.reviewChanged = function () {
     $('#reviewSaveBtn').text('Save').removeClass('btn-success').addClass('btn-primary');
+  };
+
+  $scope.resetReview = function(id) {
+    $scope.chgReview(id, -1, -1, '');
   };
 
   $scope.chgReview = function(id,a,b ,comment)
