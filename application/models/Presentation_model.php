@@ -59,7 +59,7 @@ class presentation_model extends CI_Model {
                 if($reviewresult[$j]['isAssigned'] == 1) {
                     $result[$i]['reviewers'][$reviewresult[$j]['userID']] = $userID_to_name[$reviewresult[$j]['userID']];
                 }
-                if($reviewresult[$j]['currentRating'] > 0 && $reviewresult[$j]['potentialRating'] > 0) {
+                if($reviewresult[$j]['isPublished'] == 1) {
                   $sum1 += $reviewresult[$j]['currentRating'];
                   $sum2 += $reviewresult[$j]['potentialRating'];
                   $nbreviews += 1;
@@ -141,7 +141,7 @@ class presentation_model extends CI_Model {
 	}
 	public function getreviews()
 	{
-		$reviews = $this->db->get_where('reviews', 'currentRating > 0 AND potentialRating > 0');
+		$reviews = $this->db->get_where('reviews', array('isPublished' => 1));
 		$result = $reviews->result_array();
 		for($i=0;$i<$reviews->num_rows();$i++)
 		{
@@ -372,9 +372,10 @@ class presentation_model extends CI_Model {
             'userID' => $userID,
             'taskID' => $taskID,
             'currentRating' => 0,
-            'potentialrating' => 0,
+            'potentialRating' => 0,
             'comment' => '',
             'isAssigned' => 0,
+            'isPublished' => 0,
             'initialReviewDate' => date('y-m-d'),
             'lastChangeReviewDate' => date('y-m-d')
             );
@@ -393,14 +394,16 @@ class presentation_model extends CI_Model {
         $review = $this->db->get_where('reviews', array('ID' => $_POST['id']));
         if($review->num_rows() > 0) {
           $curReview = $review->result_array()[0];
-          if($curReview['isAssigned'] == '0' && $_POST['a'] == '-1' && $_POST['b'] == '-1') {
+          $deleting = ($_POST['a'] == '-1' && $_POST['b'] == '-1');
+          if($curReview['isAssigned'] == '0' && $deleting) {
             $this->db->delete('reviews', array('ID' => $curReview['ID']));
           } else {
             $data = array(
               'comment' => $_POST['comment'],
               'currentRating' => max(0, $_POST['a']),
               'potentialRating'=> max(0, $_POST['b']),
-              'lastChangeReviewDate'=>date('y-m-d'));
+              'lastChangeReviewDate'=>date('y-m-d'),
+              'isPublished' => $deleting ? 0 : 1);
             if($review->result_array()[0]['initialReviewDate'] == '0000-00-00') {
               $data['initialReviewDate'] = date('y-m-d');
             }
@@ -420,7 +423,7 @@ class presentation_model extends CI_Model {
 		$re=array();
 		for($i=0;$i<$count;$i++)
 		{
-			$reviews = $this->db->get_where('reviews', 'taskID = '.$result[$i]['ID'].' AND currentRating > 0 AND potentialRating > 0');
+			$reviews = $this->db->get_where('reviews', array('taskID' => $result[$i]['ID'], 'isPublished' => '1'));
 			$co = $reviews->num_rows();
 			$list=$reviews->result_array();
 			$sum1=0;

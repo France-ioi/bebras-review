@@ -59,6 +59,7 @@ app.controller('TasksController', ['$scope', '$location', '$sce', 'TasksServices
 
   $scope.select = function(newSel) {
     // Select a task
+    $scope.reviewChanged();
     $scope.taskData = null;
     if(newSel) {
       $scope.sel = newSel;
@@ -72,6 +73,8 @@ app.controller('TasksController', ['$scope', '$location', '$sce', 'TasksServices
               $scope.taskData.potentialRating = curReview.potentialRating;
               $scope.taskData.reviewId = curReview.ID;
               $scope.taskData.reviewComment = curReview.comment;
+              $scope.taskData.isAssigned = curReview.isAssigned;
+              $scope.taskData.isPublished = curReview.isPublished;
             }
           }
           break;

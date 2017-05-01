@@ -1,8 +1,8 @@
 <div ng-if="hasReviews[sel]" class="col-md-6">
-    <div ng-if="taskData.isAssigned">
+    <div ng-if="taskData.isAssigned == 1">
       <i>You have been assigned this task for review.</i>
     </div>
-    <div ng-if="!taskData.isAssigned">
+    <div ng-if="taskData.isAssigned == 0">
       <i>You have <b>not</b> been assigned this task for review.</i>
     </div>
     <br />
@@ -12,8 +12,8 @@
     <div star-rating rating-value="taskData.potentialRating" ng-click="reviewChanged()"></div>
     <label class="pull-left" style="width:200px;"> Review details: </label><br/>
     <textarea class="pull-left"  style="clear:left; width:400px; height:150px;" ng-model="taskData.reviewComment" ng-change="reviewChanged()"></textarea>
-    <div ng-if="taskData.currentRating == 0 && taskData.potentialRating == 0">
-      <i>This review will not be public until you give ratings.</i>
+    <div ng-if="taskData.isPublished == 0">
+      <i>This review has not yet been published.</i>
     </div>
     <button id="reviewSaveBtn" ng-click="chgReview(taskData.reviewId,taskData.currentRating,taskData.potentialRating,taskData.reviewComment)" style="clear: both; margin:10px; float:right;" class="btn btn-primary">Save</button>
     <button id="reviewResetBtn" ng-click="resetReview(taskData.reviewId)" style="margin:10px; float: right;" class="btn btn-danger">Delete</button>

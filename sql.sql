@@ -45,6 +45,7 @@ CREATE TABLE `reviews` (
   `potentialRating` int(11) NOT NULL,
   `comment` text NOT NULL,
   `isAssigned` int(1) NOT NULL,
+  `isPublished` int(1) NOT NULL,
   `initialReviewDate` date NOT NULL,
   `lastChangeReviewDate` date NOT NULL,
   PRIMARY KEY (`ID`)
