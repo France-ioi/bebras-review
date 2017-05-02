@@ -118,6 +118,7 @@ app.controller('TasksController', ['$scope', '$location', '$sce', 'TasksServices
       if(i==j)
         $scope.yearlist[length++]=tasksList[i].year;
     }
+    $scope.yearlist.sort();
 
     length=0;
     for(i=0;i<tasksList.length;i++)
@@ -128,6 +129,7 @@ app.controller('TasksController', ['$scope', '$location', '$sce', 'TasksServices
       if(i==j)
         $scope.countrylist[length++]=tasksList[i].country;
     }
+    $scope.countrylist.sort();
 
     length=0;
     for(i=0;i<tasksList.length;i++)
@@ -139,6 +141,8 @@ app.controller('TasksController', ['$scope', '$location', '$sce', 'TasksServices
         $scope.ownerlist[length++]=tasksList[i].ownerName;
       // TODO :: use IDs for filtering, name for display
     }
+    $scope.ownerlist.sort();
+
 
     length=0;
     for(i=0;i<tasksList.length;i++)
@@ -149,6 +153,7 @@ app.controller('TasksController', ['$scope', '$location', '$sce', 'TasksServices
       if(i==j)
         $scope.grouplist[length++]=tasksList[i].Group;
     }
+    $scope.grouplist.sort();
 
     length=0;
     for(i=0;i<tasksList.length;i++)
@@ -159,6 +164,7 @@ app.controller('TasksController', ['$scope', '$location', '$sce', 'TasksServices
       if(i==j)
         $scope.statuslist[length++]=tasksList[i].status;
     }
+    $scope.statuslist.sort();
 
     length=0;
     for(i=0;i<tasksList.length;i++)
@@ -170,6 +176,7 @@ app.controller('TasksController', ['$scope', '$location', '$sce', 'TasksServices
         }
       }
     }
+    $scope.reviewerlist.sort();
 
     $scope.httpflag = (data.localCheckoutFolder.substring(0,4) == 'http');
 

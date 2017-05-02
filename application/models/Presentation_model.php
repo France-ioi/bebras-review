@@ -576,7 +576,7 @@ class presentation_model extends CI_Model {
         $dirFullPath = $baseDir . $dir;
         $dirName = basename($dirFullPath);
         // Check whether it's a task folder
-        if(strlen($dirName) > 11 && $dirName[4] == '-' && $dirName[7] == '-') {
+        if(strlen($dirName) > 9 && $dirName[4] == '-' && $dirName[7] == '-') {
             // Current folder is a task folder
             $newItem = array();
 
@@ -879,6 +879,7 @@ class presentation_model extends CI_Model {
         'SM' => 'San Marino',
         'SN' => 'Senegal',
         'SO' => 'Somalia',
+        'SP' => 'Spain',
         'SR' => 'Suriname',
         'ST' => 'Sao Tome And Principe',
         'SV' => 'El Salvador',
@@ -902,6 +903,7 @@ class presentation_model extends CI_Model {
         'TZ' => 'Tanzania',
         'UA' => 'Ukraine',
         'UG' => 'Uganda',
+        'UK' => 'United Kingdom',
         'UM' => 'United States Outlying Islands',
         'US' => 'United States',
         'UY' => 'Uruguay',
