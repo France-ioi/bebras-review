@@ -674,6 +674,91 @@ class presentation_model extends CI_Model {
         }
 	}
 
+    public function commitsvn() {
+        // Export reviews to SVN
+
+        // Check rights
+    	$username = ($this->session->userdata['logged_in']['username']);
+    	$user = $this->db->get_where('users',array('username'=>$username))->result_array()[0];
+        if($user['role'] != 'Admin') {
+            return;
+        }
+
+        // Initialize
+    	ini_set('max_execution_time', 3600);
+    
+        svn_auth_set_parameter(SVN_AUTH_PARAM_DEFAULT_USERNAME,             $this->config->item('svn_user'));
+        svn_auth_set_parameter(SVN_AUTH_PARAM_DEFAULT_PASSWORD,             $this->config->item('svn_password'));
+        svn_auth_set_parameter(PHP_SVN_AUTH_PARAM_IGNORE_SSL_VERIFY_ERRORS, true); // <--- Important for certificate issues!
+        svn_auth_set_parameter(SVN_AUTH_PARAM_NON_INTERACTIVE,              true);
+        svn_auth_set_parameter(SVN_AUTH_PARAM_NO_AUTH_CACHE,                true);
+
+        // Fetch reviews
+        $this->db->select('*');
+        $this->db->from('tasks');
+        $this->db->join('reviews', 'reviews.taskID = tasks.ID');
+        $this->db->join('users', 'reviews.userID = users.ID');
+        $this->db->where('reviews.isPublished = 1');
+        $this->db->order_by('tasks.ID', 'ASC');
+        $this->db->order_by('reviews.lastChangeReviewDate', 'ASC');
+        $reviewsByTask = array();
+        foreach($this->db->get()->result_array() as $row) {
+            $taskPath = $this->config->item('svn_basedir') . $row['folderPath'] . '/' . $row['folderName'] . '/';
+            if(!isset($reviewsByTask[$taskPath])) {
+                $reviewsByTask[$taskPath] = array();
+            }
+            $reviewsByTask[$taskPath][] = $row;
+        }
+
+        // Update local SVN
+        foreach($this->config->item('svn_modules') as $subdir) {
+            $newRev = svn_update($this->config->item('svn_basedir') . $subdir);
+        }
+        foreach($this->config->item('svn_subdirs') as $subdir) {
+            $newRev = svn_update($this->config->item('svn_basedir') . $subdir);
+        }
+
+        // Generate reviews.txt for each task
+        $modifiedFiles = array();
+        $modifiedTasks = array();
+        foreach($reviewsByTask as $taskPath => $reviews) {
+            $fileContents = "To add or update a review, go to https://review.bebras.org.\n\n";
+            foreach($reviews as $review) {
+                $fileContents .= 'By: ' . $review['firstName'] . ' ' . $review['lastName'];
+                if($review['svnLogin'] != '') {
+                    $fileContents .= ' (svn: ' . $review['svnLogin'] . ')';
+                }
+                $fileContents .= "\n";
+
+                $fileContents .= 'on ' . $review['lastChangeReviewDate'] . "\n";
+
+                if($review['isAssigned'] == 1) {
+                    $fileContents .= "Assigned review\n";
+                } else {
+                    $fileContents .= "Non-assigned review\n";
+                }
+
+                $fileContents .= "Rating as is: " . $review['currentRating'] . "/6\n";
+                $fileContents .= "Potential: " . $review['potentialRating'] . "/6\n";
+                $fileContents .= $review['comment'] . "\n";
+                $fileContents .= str_repeat('=', 40) . "\n";
+            }
+            $targetFile = realpath($taskPath . 'reviews.txt');
+            $curContents = file_get_contents($targetFile);
+            if($fileContents != $curContents) {
+                file_put_contents($targetFile, $fileContents);
+                $modifiedFiles[] = $targetFile;
+                $modifiedTasks[] = $review['folderName'];
+            }
+        }
+
+        // Commit to SVN
+        $res = svn_commit("Update reviews.txt from review.bebras.org", $modifiedFiles);
+
+        // Return the list of tasks whose reviews.txt was modified
+        return array('result' => $res, 'modified' => $modifiedTasks);
+    }
+
     public $countries = array(
         'AD' => 'Andorra',
         'AE' => 'United Arab Emirates',

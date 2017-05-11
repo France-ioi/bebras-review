@@ -165,4 +165,9 @@ class Templates extends CI_Controller {
 		$data = $this->presentation_model->updatesvn();
 		echo json_encode($data);
 	}
+	public function commitsvn()
+	{
+		$data = $this->presentation_model->commitsvn();
+		echo json_encode($data);
+	}
 }
