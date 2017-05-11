@@ -33,6 +33,11 @@ app.controller('TasksController', ['$scope', '$location', '$sce', 'TasksServices
   $scope.flag = 0; // TODO :: ???
   $scope.isAdmin = false;
 
+  // Admin buttons
+  $scope.svnInProgress = false;
+  $scope.svnMessage = '';
+  $scope.svnMsgClass = '';
+
   // Filters
   $scope.yearlist=new Array();
   $scope.ye="0";
@@ -207,9 +212,50 @@ app.controller('TasksController', ['$scope', '$location', '$sce', 'TasksServices
 
   $scope.updateSvn = function()
   {
-    TasksServices.updatesvn(function(response){
-    }, function(response){
-    });
+    $scope.svnInProgress = true;
+    $scope.svnMessage = 'Import from SVN in progress...'
+    $scope.svnMsgClass = 'alert-info';
+    TasksServices.updatesvn(
+      function(data) {
+        $scope.svnMessage = '<b>' + data.data + ' tasks updated successfully!</b>';
+        $scope.svnMsgClass = 'alert-success';
+        $scope.svnInProgress = false;
+      },
+      function(data) {
+        $scope.svnMessage = 'Error.';
+        $scope.svnMsgClass = 'alert-danger';
+        $scope.svnInProgress = false;
+      });
+  }
+
+  $scope.commitSvn = function()
+  {
+    $scope.svnInProgress = true;
+    $scope.svnMessage = 'Exporting reviews to SVN...';
+    $scope.svnMsgClass = 'alert-info';
+    TasksServices.commitsvn(
+      function(data) {
+        data = data.data;
+        var msg = '';
+        if(data.result) {
+          msg = '<b>Export to SVN successful!</b> ' + data.modified.length + ' tasks had their reviews updated.';
+          $scope.svnMsgClass = 'alert-success';
+        } else {
+          msg = '<b>Export to SVN unsuccessful.</b> ' + data.modified.length + ' tasks had their reviews locally updated, but not committed yet.';
+          $scope.svnMsgClass = 'alert-warning';
+        }
+        if(data.nonexist.length) {
+          msg += "<br /><b>Tasks which don't exist anymore in SVN:</b> " + data.nonexist.join(', ');
+        }
+        msg += "<br /><b>Tasks updated:</b> " + data.modified.join(', ');
+        $scope.svnMessage = $sce.trustAsHtml(msg);
+        $scope.svnInProgress = false;
+      },
+      function(data) {
+        $scope.svnMessage = 'Error.';
+        $scope.svnMsgClass = 'alert-danger';
+        $scope.svnInProgress = false;
+      });
   }
 
   $scope.reviewChanged = function () {

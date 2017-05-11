@@ -575,6 +575,7 @@ class presentation_model extends CI_Model {
     public function recupdatesvn($baseDir, $dir) {
         $dirFullPath = $baseDir . $dir;
         $dirName = basename($dirFullPath);
+        $count = 0;
         // Check whether it's a task folder
         if(strlen($dirName) > 9 && $dirName[4] == '-' && $dirName[7] == '-') {
             // Current folder is a task folder
@@ -634,15 +635,17 @@ class presentation_model extends CI_Model {
                           'lastChangeDate' => $newItem['lastChangeDate']),
                     array('folderName' => $newItem["folderName"]));
 			}
+            $count += 1;
         } else {
             // Current folder is not a task folder
             foreach(scandir($dirFullPath) as $elem) {
                 $elemPath = $dirFullPath . '/' . $elem;
                 if(is_dir($elemPath) && $elem != '.' && $elem != '..') {
-                    $this->recupdatesvn($baseDir, $dir . '/' . $elem);
+                    $count += $this->recupdatesvn($baseDir, $dir . '/' . $elem);
                 }
             }
         }
+        return $count;
     }
 
 	public function updatesvn()
@@ -650,7 +653,7 @@ class presentation_model extends CI_Model {
 		$username = ($this->session->userdata['logged_in']['username']);
 		$user = $this->db->get_where('users',array('username'=>$username))->result_array()[0];
         if($user['role'] != 'Admin') {
-            return;
+            return false;
         }
 
 		ini_set('max_execution_time', 3600);
@@ -666,12 +669,14 @@ class presentation_model extends CI_Model {
             $newRev = svn_update($this->config->item('svn_basedir') . $subdir);
         }
 
+        $count = 0;
         foreach($this->config->item('svn_subdirs') as $subdir) {
             $newRev = svn_update($this->config->item('svn_basedir') . $subdir);
             // TODO :: return something, such as for instance success or
             // failure ($newRev > -1) and/or how many tasks were detected
-            $this->recupdatesvn($this->config->item('svn_basedir'), $subdir);
+            $count += $this->recupdatesvn($this->config->item('svn_basedir'), $subdir);
         }
+        return $count;
 	}
 
     public function commitsvn() {
@@ -721,6 +726,7 @@ class presentation_model extends CI_Model {
         // Generate reviews.txt for each task
         $modifiedFiles = array();
         $modifiedTasks = array();
+        $nonexistingTasks = array();
         foreach($reviewsByTask as $taskPath => $reviews) {
             $fileContents = "To add or update a review, go to https://review.bebras.org.\n\n";
             foreach($reviews as $review) {
@@ -743,20 +749,25 @@ class presentation_model extends CI_Model {
                 $fileContents .= $review['comment'] . "\n";
                 $fileContents .= str_repeat('=', 40) . "\n";
             }
-            $targetFile = realpath($taskPath . 'reviews.txt');
-            $curContents = file_get_contents($targetFile);
+            if(!is_dir($taskPath)) {
+                $nonexistingTasks[] = $review['folderName'];
+                continue;
+            }
+            $targetFile = $taskPath . 'reviews.txt';
+            $curContents = is_file($targetFile) ? file_get_contents($targetFile) : '';
             if($fileContents != $curContents) {
                 file_put_contents($targetFile, $fileContents);
                 $modifiedFiles[] = $targetFile;
                 $modifiedTasks[] = $review['folderName'];
             }
+            @svn_add($targetFile);
         }
 
         // Commit to SVN
         $res = svn_commit("Update reviews.txt from review.bebras.org", $modifiedFiles);
 
         // Return the list of tasks whose reviews.txt was modified
-        return array('result' => $res, 'modified' => $modifiedTasks);
+        return array('result' => $res, 'modified' => $modifiedTasks, 'nonexist' => $nonexistingTasks);
     }
 
     public $countries = array(

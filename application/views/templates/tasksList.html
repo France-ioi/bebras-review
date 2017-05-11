@@ -67,4 +67,16 @@
     </tr>
   </tbody>
 </table>
-<button ng-if="isAdmin" ng-click="updateSvn()">SVN Update</button>
+<div ng-if="isAdmin" class="panel panel-info">
+  <div class="panel-heading">
+    Administration
+  </div>
+  <div class="panel-body">
+    <button class="btn btn-default" ng-click="updateSvn()">Import tasks from SVN</button>
+    <button class="btn btn-default" ng-click="commitSvn()">Export to SVN</button>
+    <br />
+    <div ng-if="svnMessage != ''" class="alert {{svnMsgClass}}">
+      <span ng-bind-html="svnMessage"></span>
+    </div>
+  </div>
+</div>

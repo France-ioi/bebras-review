@@ -23,6 +23,14 @@ app.factory('TasksServices', function($http) {
     });
   }
 
+  function commitsvn(onSuccess, onError){
+    $http.post(baseurl+'templates/commitsvn',
+    {
+      data:'action'
+    }).
+    then(onSuccess, onError);
+  }
+
   function reviewcreate(folderName, onSuccess, onError) {
     var dat = $.param({folderName: folderName});
     var config = {
@@ -129,6 +137,7 @@ app.factory('TasksServices', function($http) {
     changemess: changemess,
     lastsave: lastsave,
     grlist: grlist,
-    updatesvn: updatesvn
+    updatesvn: updatesvn,
+    commitsvn: commitsvn
   }
 });
