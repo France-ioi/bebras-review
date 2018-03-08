@@ -211,7 +211,7 @@ class presentation_model extends CI_Model {
 		$users = $this->db->get_where('users',array('username'=>$username));
 		$result = $users->result_array();
 		$group = $this->db->get_where('groups',array('ID'=>$result[0]['groupID']))->result_array();
-		$result[0]['Group']=$group[0]['name'];
+        $result[0]['Group'] = count($group) > 0 ? $group[0]['name'] : 'None';
 		$result[0]['flag1']="";
 		$result[0]['flag2']="";
         unset($result[0]['salt']);
