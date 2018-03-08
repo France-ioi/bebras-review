@@ -100,6 +100,7 @@ class presentation_model extends CI_Model {
         $response = array();
         $response['tasksList'] = $result;
 		$response['autoloadTasks']=$selfuser['autoLoadTasks'];
+		$response['nbReviewsDesired'] = $selfuser['nbReviewsDesired'];
 		$response['localCheckoutFolder']=$selfuser['localCheckoutFolder'];
         $response['isAdmin'] = ($selfuser['role'] == 'Admin');
 
@@ -244,6 +245,7 @@ class presentation_model extends CI_Model {
                 'lastName' => $item['lastName'],
                 'countryCode' => $item['countryCode'],
                 'autoLoadTasks' => $item['autoLoadTasks'],
+                'nbReviewsDesired' => $item['nbReviewsDesired'],
                 'localCheckoutFolder' => $item['localCheckoutFolder']);
         }
 

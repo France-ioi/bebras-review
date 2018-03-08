@@ -7,6 +7,10 @@ app.controller('ProfileController', ['$scope', '$location', 'ProfileServices', f
     });
   }
   $scope.update = function (fullprofile) {
+    $scope.data.nbReviewsDesired = (
+        $scope.data.voluntary == -4 ?
+            ($scope.data.nbVoluntary > 0 ? $scope.data.nbVoluntary : -1)
+            : $scope.data.voluntary);
     if(fullprofile) {
       var newdata = $scope.data;
     } else {
@@ -42,12 +46,14 @@ app.controller('ProfileController', ['$scope', '$location', 'ProfileServices', f
   $scope.show = function(data)
   {
     $scope.data = data.profile;
+    $scope.data.nbReviewsDesired = parseInt($scope.data.nbReviewsDesired);
+    $scope.data.voluntary = $scope.data.nbReviewsDesired > 0 ? -4 : $scope.data.nbReviewsDesired;
+    $scope.data.nbVoluntary = $scope.data.nbReviewsDesired > 0 ? $scope.data.nbReviewsDesired : 10;
     $scope.countryList = data.countryList;
     $scope.data.autoLoadTasks=((data.profile.autoLoadTasks=="false")?false:true);
     $scope.listtasks(data.ID);
   }
 
-  
   $scope.save = function()
   {
     //update

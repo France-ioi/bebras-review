@@ -22,6 +22,7 @@ Class Login_Database extends CI_Model {
 			$data['groupRole']='Member';
 			$data['localCheckoutFolder']='localCheckoutFolder';
 			$data['autoLoadtasks']="false";
+			$data['nbReviewsDesired'] = '0';
             if(!isset($data['role'])) {
 			    $data['role']='Unconfirmed';
             }

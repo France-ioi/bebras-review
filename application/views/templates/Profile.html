@@ -12,11 +12,20 @@
             <select ng-model="data.countryCode" style="clear:right">
                 <option ng-repeat="c in countryList" value="{{c.code}}" ng-selected="data.countryCode == c.code">{{c.name}}</option>
             </select><br/>
-            <label class="pull-left" style="width:220px;"> Auto-load task: </label>
+            <label class="pull-left" style="width:220px;"> Auto-load tasks: </label>
             <!--<div toggle-switch class="switch-large switch-off" ng-model="data.autoLoadTasks"></div><br/>-->
             <toggle-switch ng-model="data.autoLoadTasks" ng-style="{'background-color':((data.autoLoadTasks==true)?'#5cb85c':'#f0f0f0')}" on-label="" off-label=""></toggle-switch>
             <label class="pull-left" style="width:220px;"> Personal SVN checkout folder: </label>
             <input type="text" ng-model="data.localCheckoutFolder" style="clear:right"><br/>
+            <label class="pull-left" style="width: 220px;"> Voluntary to review tasks:</label>
+            <select ng-model="data.voluntary">
+                <option value="0">Please select...</option>
+                <option value="-1">Not voluntary</option>
+                <option value="-2">10-15 tasks</option>
+                <option value="-3">As many as you need me</option>
+                <option value="-4">Specific number:</option>
+            </select>
+            <input ng-show="data.voluntary == -4" ng-model="data.nbVoluntary"></input>
             <label class="pull-left" style="width:220px;"> Role: </label>
             <label style="clear:right">{{data.role}}</label><br/>
             <label class="pull-left" style="width:220px;"> Group: </label>
