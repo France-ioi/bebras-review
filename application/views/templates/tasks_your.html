@@ -27,7 +27,7 @@
     </select>
     <label class="pull-left" style="width:200px;"> Review details: </label><br/>
     <textarea class="pull-left"  style="clear:left; width:400px; height:150px;" ng-model="taskData.reviewComment" ng-change="reviewChanged()"></textarea>
-    <div ng-if="taskData.isPublished == 0">
+    <div ng-if="taskData.isPublished == 0" style="clear: both;">
       <i>This review has not yet been published.</i>
     </div>
     <button id="reviewSaveBtn" ng-click="saveReview(taskData)" style="clear: both; margin:10px; float:right;" class="btn btn-primary">Save</button>
