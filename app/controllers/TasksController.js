@@ -76,6 +76,8 @@ app.controller('TasksController', ['$scope', '$location', '$sce', 'TasksServices
             if(curReview.isMine && $scope.taskData.folderName == curReview.folderName) {
               $scope.taskData.currentRating = curReview.currentRating;
               $scope.taskData.potentialRating = curReview.potentialRating;
+              $scope.taskData.itsInformatics = curReview.itsInformatics;
+              $scope.taskData.ageDifficulty = curReview.ageDifficulty;
               $scope.taskData.reviewId = curReview.ID;
               $scope.taskData.reviewComment = curReview.comment;
               $scope.taskData.isAssigned = curReview.isAssigned;
@@ -263,16 +265,25 @@ app.controller('TasksController', ['$scope', '$location', '$sce', 'TasksServices
   };
 
   $scope.resetReview = function(id) {
-    $scope.chgReview(id, -1, -1, '');
+    $scope.chgReview(id, {
+      currentRating: -1,
+      potentialRating: -1,
+      itsInformatics: 'none',
+      ageDifficulty: 'none',
+      reviewComment: ''});
   };
 
-  $scope.chgReview = function(id,a,b ,comment)
+  $scope.saveReview = function(taskData) {
+    $scope.chgReview(taskData.reviewId, taskData);
+  };
+
+  $scope.chgReview = function(id, reviewData)
   {
     var btn = $('#reviewSaveBtn');
     btn.stop(true, true);
     btn.removeClass('btn-success').addClass('btn-primary');
     btn.text('Saving...');
-    TasksServices.reviewchange(id, a,b,comment, function(response) {
+    TasksServices.reviewchange(id, reviewData, function(response) {
       btn.text('Saved!');
       btn.removeClass('btn-primary').addClass('btn-success');
       $scope.getTasks();

@@ -5,7 +5,7 @@
         Average "potential" rating {{taskData.p}}
     </div>
  
-    <div ng-repeat="y in reviewsList" ng-if="y.folderName == sel && y.currentRating > 0 && y.potentialRating > 0" style="clear:both; border-radius: 5px; border:1px solid; margin:5px; padding:10px; height:30%">
+    <div ng-repeat="y in reviewsList" ng-if="y.folderName == sel && y.currentRating > 0 && y.potentialRating > 0" style="clear:both; border-radius: 5px; border:1px solid; margin:5px; padding:10px; height:300px">
         <div class="bottom row">
             <div class="col-md-4">
                 <label style="width:90px">Review by:</label>
@@ -16,6 +16,16 @@
                 <div star-rating rating-value="y.currentRating" rating-readonly="true" style="display:inline;"></div>
                 <label style="width:90px">Potential:</label>
                 <div star-rating rating-value="y.potentialRating" rating-readonly="true" style="display:inline;"></div>
+                <label ng-show="y.itsInformatics != 'none'">It's informatics section:</label>
+                <span ng-show="y.itsInformatics == 'great'">Great as it is now</span>
+                <span ng-show="y.itsInformatics == 'canImprove'">Can be improved</span>
+                <span ng-show="y.itsInformatics == 'missing'">Missing</span>
+                <br>
+                <label ng-show="y.ageDifficulty != 'none'">Combination age group / difficulty level:</label>
+                <span ng-show="y.ageDifficulty == 'easier'">Easier than indicated</span>
+                <span ng-show="y.ageDifficulty == 'good'">Good</span>
+                <span ng-show="y.ageDifficulty == 'harder'">Harder than indicated</span>
+                <span ng-show="y.ageDifficulty == 'missing'">Missing</span>
             </div>
             <div class="col-md-8">
                 <textarea readonly style="width:100%; height:100%; border:0;  outline:0;">{{y.comment}}</textarea>

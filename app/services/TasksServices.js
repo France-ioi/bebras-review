@@ -42,10 +42,15 @@ app.factory('TasksServices', function($http) {
         .then(onSuccess, onError);
   }
 
-  function reviewchange(id, a,b,comment, onSuccess, onError){
-     var dat = $.param({
-                id, a,b,comment
-            });
+  function reviewchange(id, reviewData, onSuccess, onError){
+    var dat = $.param({
+      id: id,
+      currentRating: reviewData.currentRating,
+      potentialRating: reviewData.potentialRating,
+      itsInformatics: reviewData.itsInformatics,
+      ageDifficulty: reviewData.ageDifficulty,
+      comment: reviewData.reviewComment
+      });
     var config = {
         headers:{
           'Content-Type': 'application/x-www-form-urlencoded;'

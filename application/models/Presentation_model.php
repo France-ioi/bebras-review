@@ -375,6 +375,8 @@ class presentation_model extends CI_Model {
             'taskID' => $taskID,
             'currentRating' => 0,
             'potentialRating' => 0,
+            'itsInformatics' => 'none',
+            'ageDifficulty' => 'none',
             'comment' => '',
             'isAssigned' => 0,
             'isPublished' => 0,
@@ -402,8 +404,10 @@ class presentation_model extends CI_Model {
           } else {
             $data = array(
               'comment' => $_POST['comment'],
-              'currentRating' => max(0, $_POST['a']),
-              'potentialRating'=> max(0, $_POST['b']),
+              'currentRating' => max(0, $_POST['currentRating']),
+              'potentialRating'=> max(0, $_POST['potentialRating']),
+              'itsInformatics' => $_POST['itsInformatics'],
+              'ageDifficulty' => $_POST['ageDifficulty'],
               'lastChangeReviewDate'=>date('y-m-d'),
               'isPublished' => $deleting ? 0 : 1);
             if($review->result_array()[0]['initialReviewDate'] == '0000-00-00') {

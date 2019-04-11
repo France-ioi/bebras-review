@@ -10,12 +10,27 @@
     <div star-rating rating-value="taskData.currentRating" ng-click="reviewChanged()"></div>
     <label class="pull-left" style="width:200px;"> Your rating of the potential: </label>
     <div star-rating rating-value="taskData.potentialRating" ng-click="reviewChanged()"></div>
+    <label class="pull-left" style="width:200px;"> The <i>It's informatics</i> section: </label>
+    <select ng-change="reviewChanged()" ng-model="taskData.itsInformatics">
+      <option value="none" default>Not evaluated</option>
+      <option value="great">Is great as it is now</option>
+      <option value="canImprove">Can be improved</option>
+      <option value="missing">Is still missing</option>
+    </select>
+    <label class="pull-left" style="width:200px;"> The combination of age group and difficulty level: </label>
+    <select ng-change="reviewChanged()" ng-model="taskData.ageDifficulty">
+      <option value="none" default>Not evaluated</option>
+      <option value="easier">The task looks easier than indicated</option>
+      <option value="good">The level is good</option>
+      <option value="harder">The task looks harder than indicated</option>
+      <option value="missing">Is missing</option>
+    </select>
     <label class="pull-left" style="width:200px;"> Review details: </label><br/>
     <textarea class="pull-left"  style="clear:left; width:400px; height:150px;" ng-model="taskData.reviewComment" ng-change="reviewChanged()"></textarea>
     <div ng-if="taskData.isPublished == 0">
       <i>This review has not yet been published.</i>
     </div>
-    <button id="reviewSaveBtn" ng-click="chgReview(taskData.reviewId,taskData.currentRating,taskData.potentialRating,taskData.reviewComment)" style="clear: both; margin:10px; float:right;" class="btn btn-primary">Save</button>
+    <button id="reviewSaveBtn" ng-click="saveReview(taskData)" style="clear: both; margin:10px; float:right;" class="btn btn-primary">Save</button>
     <button id="reviewResetBtn" ng-click="resetReview(taskData.reviewId)" style="margin:10px; float: right;" class="btn btn-danger">Delete</button>
 </div>
 <div ng-if="!hasReviews[sel]">
