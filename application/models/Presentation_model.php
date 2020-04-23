@@ -47,35 +47,45 @@ class presentation_model extends CI_Model {
                 $result[$i]['groupadminflag'] = true;
             }
 
-			$review = $this->db->get_where('reviews', 'taskID = '.$result[$i]['ID']);
-			$reviewresult=$review->result_array();
-			$sum1 = 0;
-			$sum2 = 0;
+            $review = $this->db->get_where('reviews', 'taskID = '.$result[$i]['ID']);
+            $reviewresult=$review->result_array();
+            $sumCurrent = 0;
+            $sumPotential = 0;
             $nbreviews = 0;
+            $nbReviewsCurrent = 0;
+            $nbReviewsPotential = 0;
 
             $result[$i]['reviewers'] = Array();
-			for($j=0;$j<$review->num_rows();$j++)
-			{
+            for($j=0;$j<$review->num_rows();$j++) {
                 if($reviewresult[$j]['isAssigned'] == 1) {
                     $result[$i]['reviewers'][$reviewresult[$j]['userID']] = $userID_to_name[$reviewresult[$j]['userID']];
                 }
                 if($reviewresult[$j]['isPublished'] == 1) {
-                  $sum1 += $reviewresult[$j]['currentRating'];
-                  $sum2 += $reviewresult[$j]['potentialRating'];
+                  $sumCurrent += $reviewresult[$j]['currentRating'];
+                  $sumPotential += $reviewresult[$j]['potentialRating'];
+                  if ($reviewresult[$j]['currentRating'] > 0) {
+                     $nbReviewsCurrent += 1;
+                  }
+                  if ($reviewresult[$j]['potentialRating'] > 0) {
+                     $nbReviewsPotential += 1;
+                  }
                   $nbreviews += 1;
                 }
 			}
-            if($nbreviews > 0) {
-              $result[$i]['ar'] = number_format($sum1/$nbreviews,1);
-              $result[$i]['p'] = number_format($sum2/$nbreviews,1);
+            if($nbReviewsCurrent > 0) {
+               $result[$i]['ar'] = number_format($sumCurrent/$nbReviewsCurrent,1);
             } else {
-              $result[$i]['ar'] = 0;
-              $result[$i]['p'] = 0;
+               $result[$i]['ar'] = 0;
             }
-			$result[$i]['Reviews'] = $nbreviews;
+            if ($nbReviewsPotential > 0) {
+               $result[$i]['p'] = number_format($sumPotential/$nbReviewsPotential,1);
+            } else {
+               $result[$i]['p'] = 0;
+            }
+            $result[$i]['Reviews'] = $nbreviews;
 
-			if($result[$i]['htmlFileName']) {
-			    $result[$i]['htmlLink'] = $this->config->item('svn_reldir') . $result[$i]['folderPath'] . '/' . $result[$i]['folderName'] . '/' . $result[$i]['htmlFileName'];
+            if($result[$i]['htmlFileName']) {
+                $result[$i]['htmlLink'] = $this->config->item('svn_reldir') . $result[$i]['folderPath'] . '/' . $result[$i]['folderName'] . '/' . $result[$i]['htmlFileName'];
                 $result[$i]['otherHtmlLink']=$selfuser['localCheckoutFolder']."/".$result[$i]['folderName']."/".$result[$i]['htmlFileName'];
             } else {
 				$result[$i]['htmlLink']="";
@@ -286,20 +296,29 @@ class presentation_model extends CI_Model {
 			$review = $this->db->get_where('reviews',array('taskID'=>$result[$i]['ID']));
 			$result[$i]['Reviews']=$review->num_rows();
 			$reviewresult=$review->result_array();
-			$sum1=0;
-			$sum2=0;
+			$sumCurrent=0;
+			$sumPotential=0;
+			$nbReviewsCurrent = 0;
+			$nbReviewsPotential = 0;
 			for($j=0;$j<$review->num_rows();$j++)
 			{
-				$sum1+=$reviewresult[$j]['currentRating'];
-				$sum2+=$reviewresult[$j]['potentialRating'];
+				$sumCurrent += $reviewresult[$j]['currentRating'];
+				if ($reviewresult[$j]['currentRating'] > 0) {
+					$nbReviewsCurrent += 1;
+				}
+				$sumPotential += $reviewresult[$j]['potentialRating'];
+				if ($reviewresult[$j]['potentialRating']) {
+					$nbReviewsPotential += 1;
+				}
+				
 			}
 
-			if($review->num_rows()>0)
-				$result[$i]['ar']=number_format($sum1/$review->num_rows(),1);
+			if($nbReviewsCurrent > 0)
+				$result[$i]['ar']=number_format($sumCurrent/$nbReviewsCurrent,1);
 			else
 				$result[$i]['ar']=0;
-			if($review->num_rows()>0)
-				$result[$i]['p']=number_format($sum2/$review->num_rows(),1);
+			if($nbReviewsPotential > 0)
+				$result[$i]['p']=number_format($sumPotential/$nbReviewsPotential,1);
 			else
 				$result[$i]['p']=0;
 					
@@ -398,7 +417,7 @@ class presentation_model extends CI_Model {
         $review = $this->db->get_where('reviews', array('ID' => $_POST['id']));
         if($review->num_rows() > 0) {
           $curReview = $review->result_array()[0];
-          $deleting = ($_POST['a'] == '-1' && $_POST['b'] == '-1');
+          $deleting = ($_POST['currentRating'] == '-1' && $_POST['potentialRating'] == '-1');
           if($curReview['isAssigned'] == '0' && $deleting) {
             $this->db->delete('reviews', array('ID' => $curReview['ID']));
           } else {
@@ -432,24 +451,34 @@ class presentation_model extends CI_Model {
 			$reviews = $this->db->get_where('reviews', array('taskID' => $result[$i]['ID'], 'isPublished' => '1'));
 			$co = $reviews->num_rows();
 			$list=$reviews->result_array();
-			$sum1=0;
-			$sum2=0;
+			$sumCurrent=0;
+			$sumPotential=0;
+			$nbReviewsCurrent = 0;
+			$nbReviewsPotential = 0;
 			for($j=0;$j<$co;$j++)
 			{
 				$user = $this->db->get_where('users',array('ID'=>$list[$j]['userID']))->result_array();
 				$list[$j]['author']=$user[0]['firstName'] . ' ' . $user[0]['lastName'];
-				$sum1+=$list[$j]['currentRating'];
-				$sum2+=$list[$j]['potentialRating'];
+				$sumCurrent+=$list[$j]['currentRating'];
+				if ($list[$j]['currentRating'] > 0) {
+					$nbReviewsCurrent += 1;
+				}
+				$sumPotential+=$list[$j]['potentialRating'];
+				if ($list[$j]['potentialRating']) {
+					$nbReviewsPotential += 1;
+				}
 			}
 			$val['data']=$list;
-			if($co>0)
-			{
-				$val['ar']=number_format($sum1/$co,1);
-				$val['p']=number_format($sum2/$co,1);
+                        if($nbReviewsCurrent>0) {
+                                $val['ar']=number_format($sumCurrent/$nbReviewsCurrent,1);
+                        }
+                        else {
+                                $val['ar']=0;
 			}
-			else
-			{
-				$val['ar']=0;
+			if($nbReviewsPotential>0) {
+				$val['p']=number_format($sumPotential/$nbReviewsPotential,1);
+			}
+			else {
 				$val['p']=0;
 			}
 			$val['count']=$co;
