@@ -18,7 +18,6 @@ header("location: login");
 	<link href="<?php echo base_url(); ?>assets/style/dropdown.css" media="all" rel="stylesheet" type="text/css">
 	<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
 	
-
 	<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 	<script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.1/js/bootstrap.min.js"></script>
 	
@@ -31,23 +30,23 @@ header("location: login");
 
 	<!-- MY App -->
 	<script src="<?php echo base_url(); ?>app/routes.js.php"></script>
-	<script src="<?php echo base_url(); ?>app/packages/dirPagination.js"></script>
-	<script src="<?php echo base_url(); ?>app/packages/directive.js"></script>
+	<script src="<?php echo base_url(); ?>app/packages/dirPagination.js?v=8"></script>
+	<script src="<?php echo base_url(); ?>app/packages/directive.js?v=8"></script>
 	
 
-	<script src="<?php echo base_url(); ?>app/services/PresentationServices.js"></script>
-	<script src="<?php echo base_url(); ?>app/services/TasksServices.js"></script>
-	<script src="<?php echo base_url(); ?>app/services/ReviewsServices.js"></script>
-	<script src="<?php echo base_url(); ?>app/services/UsersServices.js"></script>
-	<script src="<?php echo base_url(); ?>app/services/ProfileServices.js"></script>
-	<script src="<?php echo base_url(); ?>app/helper/myHelper.js"></script>
+	<script src="<?php echo base_url(); ?>app/services/PresentationServices.js?v=8"></script>
+	<script src="<?php echo base_url(); ?>app/services/TasksServices.js?v=8"></script>
+	<script src="<?php echo base_url(); ?>app/services/ReviewsServices.js?v=8"></script>
+	<script src="<?php echo base_url(); ?>app/services/UsersServices.js?v=8"></script>
+	<script src="<?php echo base_url(); ?>app/services/ProfileServices.js?v=8"></script>
+	<script src="<?php echo base_url(); ?>app/helper/myHelper.js?v=8"></script>
 
 	<!-- App Controller -->
-	<script src="<?php echo base_url(); ?>app/controllers/PresentationController.js"></script>
-	<script src="<?php echo base_url(); ?>app/controllers/TasksController.js"></script>
-	<script src="<?php echo base_url(); ?>app/controllers/ReviewsController.js"></script>
-	<script src="<?php echo base_url(); ?>app/controllers/UsersController.js"></script>
-	<script src="<?php echo base_url(); ?>app/controllers/ProfileController.js"></script>
+	<script src="<?php echo base_url(); ?>app/controllers/PresentationController.js?v=8"></script>
+	<script src="<?php echo base_url(); ?>app/controllers/TasksController.js?v=8"></script>
+	<script src="<?php echo base_url(); ?>app/controllers/ReviewsController.js?v=8"></script>
+	<script src="<?php echo base_url(); ?>app/controllers/UsersController.js?v=8"></script>
+	<script src="<?php echo base_url(); ?>app/controllers/ProfileController.js?v=8"></script>
 
 	<style>
 		table {
