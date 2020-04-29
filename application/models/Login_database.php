@@ -65,11 +65,12 @@ Class Login_Database extends CI_Model {
         svn_auth_set_parameter(SVN_AUTH_PARAM_NON_INTERACTIVE,              true);
         svn_auth_set_parameter(SVN_AUTH_PARAM_NO_AUTH_CACHE,                true);
 
-        if(@svn_ls($this->config->item('svn_remote'))) {
+        $svnls = @svn_ls($this->config->item('svn_remote'));
+        if($svnls && count($svnls) > 0) {
             if($query->num_rows() == 1) {
                 // Update password
                 $salt = md5(time());
-                $this->db->update('users', array('salt' => $salt, 'password' => md5($data['password'] . $data['salt'])), array('username' => $username));
+                $this->db->update('users', array('salt' => $salt, 'password' => md5($data['password'] . $salt)), array('username' => $data['username']));
                 return 'ok';
             } else {
                 // Create new user automatically
