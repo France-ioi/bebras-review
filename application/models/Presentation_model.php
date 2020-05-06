@@ -781,6 +781,13 @@ class presentation_model extends CI_Model {
 
                 $fileContents .= "Rating as is: " . $review['currentRating'] . "/6\n";
                 $fileContents .= "Potential: " . $review['potentialRating'] . "/6\n";
+                if($review['itsInformatics'] == 'great') {
+                    $fileContents .= "It's informatics section: Great as it is now\n";
+                } elseif($review['itsInformatics'] == 'canImprove') {
+                    $fileContents .= "It's informatics section: Can be improved\n";
+                } elseif($review['itsInformatics'] == 'missing') {
+                    $fileContents .= "It's informatics section: Missing\n";
+                }
                 $fileContents .= $review['comment'] . "\n";
                 $fileContents .= str_repeat('=', 40) . "\n";
             }
