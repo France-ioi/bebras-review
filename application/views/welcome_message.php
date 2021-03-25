@@ -94,7 +94,7 @@ header("location: login");
 			</div>
 			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 				<ul class="nav navbar-nav">
-					<li><a href="#/Presentation">Presentation</a></li>
+					<li><a href="#/">Presentation</a></li>
 					<li><a href="#/Tasks">Tasks</a></li>
 					<li><a href="#/Reviews">Reviews</a></li>
 					<li><a href="#/Users">Users</a></li>

@@ -9,7 +9,7 @@ echo 'var baseurl="' . $config['base_url'] . '"';
 app.config(['$routeProvider',
     function($routeProvider) {
         $routeProvider.
-            when('/Presentation', {
+            when('/', {
                 templateUrl: baseurl+'templates/view/Presentation.html',
                 controller: 'PresentationController'
             }).
