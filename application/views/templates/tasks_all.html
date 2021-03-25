@@ -5,7 +5,7 @@
         Average "potential" rating {{taskData.p}}
     </div>
  
-    <div ng-repeat="y in reviewsList" ng-if="y.folderName == sel && y.currentRating > 0 && y.potentialRating > 0" style="clear:both; border-radius: 5px; border:1px solid; margin:5px; padding:10px; height:300px">
+    <div ng-repeat="y in reviewsList" ng-if="y.folderName == sel && y.isPublished == 1" style="clear:both; border-radius: 5px; border:1px solid; margin:5px; padding:10px; height:300px">
         <div class="bottom row">
             <div class="col-md-4">
                 <label style="width:90px">Review by:</label>

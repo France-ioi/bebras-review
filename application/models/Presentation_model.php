@@ -294,14 +294,17 @@ class presentation_model extends CI_Model {
 				$result[$i]['Group']="No Group";
 		
 			$review = $this->db->get_where('reviews',array('taskID'=>$result[$i]['ID']));
-			$result[$i]['Reviews']=$review->num_rows();
 			$reviewresult=$review->result_array();
 			$sumCurrent=0;
 			$sumPotential=0;
 			$nbReviewsCurrent = 0;
 			$nbReviewsPotential = 0;
+			$nbReviews = 0;
 			for($j=0;$j<$review->num_rows();$j++)
 			{
+				if ($reviewresult[$j]['isPublished'] ==1) {
+					$nbReviews += 1;
+				}
 				$sumCurrent += $reviewresult[$j]['currentRating'];
 				if ($reviewresult[$j]['currentRating'] > 0) {
 					$nbReviewsCurrent += 1;
@@ -312,6 +315,7 @@ class presentation_model extends CI_Model {
 				}
 				
 			}
+			$result[$i]['Reviews']=$nbReviews;
 
 			if($nbReviewsCurrent > 0)
 				$result[$i]['ar']=number_format($sumCurrent/$nbReviewsCurrent,1);
@@ -455,6 +459,7 @@ class presentation_model extends CI_Model {
 			$sumPotential=0;
 			$nbReviewsCurrent = 0;
 			$nbReviewsPotential = 0;
+			$nbReviews = 0;
 			for($j=0;$j<$co;$j++)
 			{
 				$user = $this->db->get_where('users',array('ID'=>$list[$j]['userID']))->result_array();
@@ -466,6 +471,9 @@ class presentation_model extends CI_Model {
 				$sumPotential+=$list[$j]['potentialRating'];
 				if ($list[$j]['potentialRating']) {
 					$nbReviewsPotential += 1;
+				}
+				if ($list[$j]['isPublished'] == 1) {
+					$nbReviews += 1;
 				}
 			}
 			$val['data']=$list;
@@ -481,7 +489,7 @@ class presentation_model extends CI_Model {
 			else {
 				$val['p']=0;
 			}
-			$val['count']=$co;
+			$val['count']=$nbReviews;
 			$re[$result[$i]['folderName']]=$val;
 		}
 		return $re;
