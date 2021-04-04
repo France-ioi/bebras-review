@@ -55,7 +55,7 @@ class presentation_model extends CI_Model {
                 $result[$i]['groupadminflag'] = true;
             }
 
-            $review = $this->db->get_where('reviews', 'taskID = '.$result[$i]['ID']);
+            $review = $this->db->get_where('reviews', ['taskID' => $result[$i]['ID']]);
             $reviewresult=$review->result_array();
             $sumCurrent = 0;
             $sumPotential = 0;
@@ -137,6 +137,7 @@ class presentation_model extends CI_Model {
 			$tasks = $this->db->get_where('tasks',array('ID'=>$result[$i]['taskID']))->result_array();
             $result[$i]['isMine'] = ($selfuser['ID'] == $result[$i]['userID']);
 			$result[$i]['folderName']=$tasks[0]['folderName'];
+			$result[$i]['textID']=$tasks[0]['textID'];
 			$result[$i]['year']=$tasks[0]['year'];
 			$result[$i]['countryCode']=$tasks[0]['countryCode'];
             if(isset($this->countries[$result[$i]['countryCode']])) {
@@ -193,9 +194,14 @@ class presentation_model extends CI_Model {
 	}
 	public function getuser()
 	{
-		$tasks = $this->db->get('users');
-		$result = $tasks->result_array();
-		for($i=0;$i<$tasks->num_rows();$i++)
+        $taskIdToText = [];
+        foreach($this->db->get('tasks')->result_array() as $task) {
+            $taskIdToText[$task['ID']] = $task['textID'];
+        }
+
+		$users = $this->db->get('users');
+		$result = $users->result_array();
+		for($i=0;$i<$users->num_rows();$i++)
 		{
             if(isset($this->countries[$result[$i]['countryCode']])) {
                 $result[$i]['country'] = $result[$i]['countryCode'] . ' - ' . $this->countries[$result[$i]['countryCode']];
@@ -211,7 +217,9 @@ class presentation_model extends CI_Model {
 			$result[$i]['nbReviewsDone'] = 0;
 			$result[$i]['nbReviewsAssigned'] = 0;
 			$result[$i]['nbReviewsAssignedDone'] = 0;
+			$result[$i]['reviewIds'] = [];
 			foreach($this->db->get_where('reviews', ['userID' => $result[$i]['ID']])->result_array() as $review) {
+			    $result[$i]['reviewIds'][] = $taskIdToText[$review['taskID']];
                 $done = $review['isPublished'] == 1;
                 $assigned = $review['isAssigned'] == 1;
                 if($assigned) {
@@ -287,7 +295,7 @@ class presentation_model extends CI_Model {
 
         $this->db->update('users', $newdata, array('ID' => $user['ID']));
 
-        $this->autoassign();
+        $this->autoassign(true);
 
         return $this->getprofile();
 	}
@@ -642,22 +650,22 @@ class presentation_model extends CI_Model {
 		$this->db->update('users',array('autoLoadTasks'=>"true"),array('username'=>$username)); // TODO :: uh, always true?
 	}
 
-    public function autoassign() {
+    public function autoassign($internal=false) {
         if(!$this->config->item('autoassign_enable')) { return; }
 
         $targetNb = $this->config->item('autoassign_target');
         $unlimitedIs = $this->config->item('autoassign_unlimited_is');
 
         // Check rights
-        if(!$this->isAdmin()) { return; }
+        if(!$internal && !$this->isAdmin()) { return; }
 
         // Get all tasks data
         $tasks = [];
         foreach($this->db->get('tasks')->result_array() as $task) {
             $taskID = $task['ID'];
             $newTask = ['ID' => $taskID, 'folderName' => $task['folderName'], 'countryCode' => $task['countryCode']];
-            $newTask['reviews'] = $this->db->get_where('reviews', ['taskID' => $taskID])->result_array();
-            $newTask['nbReviews'] = count($newTask['reviews']);
+            $newTask['reviewers'] = [];
+            $newTask['nbReviews'] = 0;
             $tasks[$taskID] = $newTask;
         }
         function taskcmp($a, $b) {
@@ -686,6 +694,8 @@ class presentation_model extends CI_Model {
             $userID = $review['userID'];
             if(!isset($userInfo[$userID])) { continue; }
             $userInfo[$userID]['nbReviewsLeft']--;
+            $tasks[$review['taskID']]['reviewers'][] = $userID;
+            $tasks[$review['taskID']]['nbReviews']++;
             $countryCode = $tasks[$review['taskID']]['countryCode'];
             if(!in_array($countryCode, $userInfo[$userID]['countriesDone'])) {
                 $userInfo[$userID]['countriesDone'][] = $countryCode;
@@ -707,7 +717,7 @@ class presentation_model extends CI_Model {
                 $possibleUsers = [];
                 $countryCode = $task['countryCode'];
                 foreach($userInfo as $userID => $info) {
-                    if($info['countryCode'] == $countryCode || $info['nbReviewsLeft'] <= 0) { continue; }
+                    if($info['countryCode'] == $countryCode || $info['nbReviewsLeft'] <= 0 || in_array($userID, $task['reviewers'])) { continue; }
                     $score = $info['nbReviewsLeft'];
                     $score += in_array($countryCode, $info['countriesDone']) ? 0 : 100;
                     $possibleUsers[$userID] = $score;
@@ -842,8 +852,8 @@ class presentation_model extends CI_Model {
         $password = $this->config->item('cron_password');
         if(!$password || $_GET['password'] != $password) { return; }
         $this->updatesvn(true);
-        $this->autoassign();
-        $this->commitsvn();
+        $this->autoassign(true);
+        $this->commitsvn(true);
     }
 
 	public function updatesvn($cron = false)

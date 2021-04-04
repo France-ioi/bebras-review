@@ -1,4 +1,4 @@
-app.controller('TasksController', ['$scope', '$location', '$sce', 'TasksServices', function($scope, $location, $sce, TasksServices){
+app.controller('TasksController', ['$scope', '$location', '$routeParams', '$sce', 'TasksServices', function($scope, $location, $routeParams, $sce, TasksServices){
   $scope.getTasks=function(initial) {
     TasksServices.getData('tasks', function(response){
       $scope.loadData(response.data, initial);
@@ -69,7 +69,8 @@ app.controller('TasksController', ['$scope', '$location', '$sce', 'TasksServices
     if(newSel) {
       $scope.sel = newSel;
       for(i=0; i < $scope.tasksList.length; i++) {
-        if($scope.tasksList[i].folderName == newSel) {
+        if($scope.tasksList[i].folderName == newSel || $scope.tasksList[i].textID == newSel) {
+          $scope.sel = $scope.tasksList[i].textID;
           $scope.taskData = $scope.tasksList[i];
           for(var i=0; i<$scope.reviewsList.length; i++) {
             var curReview = $scope.reviewsList[i];
@@ -93,6 +94,10 @@ app.controller('TasksController', ['$scope', '$location', '$sce', 'TasksServices
       }
     } else {
       $scope.sel = null;
+    }
+
+    if($scope.sel) {
+        $location.path('/Tasks/' + $scope.sel, false);
     }
 
     $scope.listMode = !$scope.sel;
@@ -192,15 +197,14 @@ app.controller('TasksController', ['$scope', '$location', '$sce', 'TasksServices
     $scope.hasReviews = {};
     for(var i=0; i<$scope.reviewsList.length; i++) {
       if($scope.reviewsList[i].isMine) {
-        $scope.hasReviews[$scope.reviewsList[i].folderName] = true;
+        $scope.hasReviews[$scope.reviewsList[i].textID] = true;
       }
     }
 
     if(initial) {
       // First load of the page
-      var searchObject = $location.search();
-      if(searchObject['id']) {
-        $scope.select(searchObject['id']);
+      if($routeParams['taskId']) {
+        $scope.select($routeParams['taskId']);
       } else {
         $scope.select(null);
       }

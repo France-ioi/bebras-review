@@ -20,7 +20,11 @@ public function __construct() {
 
 // Show login page
 public function index() {
-	$this->load->view('login_form');
+    if($this->session->userdata('logged_in')) {
+        $this->load->view('welcome_message');
+    } else {
+    	$this->load->view('login_form');
+    }
 }
 
 // Show registration page
@@ -69,7 +73,8 @@ public function user_login_process() {
 
     if ($this->form_validation->run() == FALSE) {
         if(isset($this->session->userdata['logged_in'])){
-            $this->load->view('welcome_message');
+            $this->load->helper('url');
+            redirect('/');
         }else{
             $this->load->view('login_form');
         }
@@ -90,7 +95,8 @@ public function user_login_process() {
                 );
                 // Add user data in session
                 $this->session->set_userdata('logged_in', $session_data);
-                $this->load->view('welcome_message');
+                $this->load->helper('url');
+                redirect('/');
             }
         } elseif ($result == 'create_error') {
             $data = array(
@@ -118,8 +124,10 @@ public function user_login_process() {
 			'username' => ''
 		);
 		$this->session->unset_userdata('logged_in', $sess_array);
-		$data['message_display'] = 'Successfully logged out';
-		$this->load->view('login_form', $data);
+        $this->load->helper('url');
+        redirect('/');
+		//$data['message_display'] = 'Successfully logged out';
+		//$this->load->view('login_form', $data);
 	}
 
 }

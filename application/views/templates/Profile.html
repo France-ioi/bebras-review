@@ -57,7 +57,7 @@
         <legend style="width:initial; border:0; margin:0;">My assigned tasks</legend>
         <select ng-model="sel" size="5" style="width:100%; height:430px;">
         <option disabled value=0 style="background-color: rgb(200,200,200);">FolderName</option>
-        <option ng-repeat="item in list" value="{{item.folderName}}" ng-click="sele(item.folderName)">{{item.folderName}}</option>
+        <option ng-repeat="item in list" value="{{item.textID}}" ng-click="sele(item.textID)">{{item.folderName}}</option>
         </select>
     </fieldset>
 </div>

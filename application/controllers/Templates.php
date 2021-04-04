@@ -41,7 +41,7 @@ class Templates extends CI_Controller {
 	}
 	public function presentation()
 	{
-		$data = $this->presentation_model->getdata();
+		$data = $this->presentation_model->getprofile();
 		echo json_encode($data);
 	}
 	public function reviews()

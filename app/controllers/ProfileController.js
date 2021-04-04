@@ -99,7 +99,7 @@ app.controller('ProfileController', ['$scope', '$location', 'ProfileServices', f
 
   $scope.sele = function()
   {
-    $location.url("Tasks?id="+$scope.sel);
+    $location.path("/Tasks/"+$scope.sel);
   }
 
   $scope.sel=0;

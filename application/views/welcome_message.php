@@ -29,24 +29,24 @@ header("location: login");
 	<script src="<?php echo base_url(); ?>assets/angular-toggle-switch.js"></script>
 
 	<!-- MY App -->
-	<script src="<?php echo base_url(); ?>app/routes.js.php"></script>
-	<script src="<?php echo base_url(); ?>app/packages/dirPagination.js?v=8"></script>
-	<script src="<?php echo base_url(); ?>app/packages/directive.js?v=8"></script>
+	<script src="<?php echo base_url(); ?>app/routes.js.php?v=10"></script>
+	<script src="<?php echo base_url(); ?>app/packages/dirPagination.js?v=10"></script>
+	<script src="<?php echo base_url(); ?>app/packages/directive.js?v=10"></script>
 	
 
-	<script src="<?php echo base_url(); ?>app/services/PresentationServices.js?v=8"></script>
-	<script src="<?php echo base_url(); ?>app/services/TasksServices.js?v=8"></script>
-	<script src="<?php echo base_url(); ?>app/services/ReviewsServices.js?v=8"></script>
-	<script src="<?php echo base_url(); ?>app/services/UsersServices.js?v=8"></script>
-	<script src="<?php echo base_url(); ?>app/services/ProfileServices.js?v=8"></script>
-	<script src="<?php echo base_url(); ?>app/helper/myHelper.js?v=8"></script>
+	<script src="<?php echo base_url(); ?>app/services/PresentationServices.js?v=10"></script>
+	<script src="<?php echo base_url(); ?>app/services/TasksServices.js?v=10"></script>
+	<script src="<?php echo base_url(); ?>app/services/ReviewsServices.js?v=10"></script>
+	<script src="<?php echo base_url(); ?>app/services/UsersServices.js?v=10"></script>
+	<script src="<?php echo base_url(); ?>app/services/ProfileServices.js?v=10"></script>
+	<script src="<?php echo base_url(); ?>app/helper/myHelper.js?v=10"></script>
 
 	<!-- App Controller -->
-	<script src="<?php echo base_url(); ?>app/controllers/PresentationController.js?v=8"></script>
-	<script src="<?php echo base_url(); ?>app/controllers/TasksController.js?v=8"></script>
-	<script src="<?php echo base_url(); ?>app/controllers/ReviewsController.js?v=8"></script>
-	<script src="<?php echo base_url(); ?>app/controllers/UsersController.js?v=8"></script>
-	<script src="<?php echo base_url(); ?>app/controllers/ProfileController.js?v=8"></script>
+	<script src="<?php echo base_url(); ?>app/controllers/PresentationController.js?v=10"></script>
+	<script src="<?php echo base_url(); ?>app/controllers/TasksController.js?v=10"></script>
+	<script src="<?php echo base_url(); ?>app/controllers/ReviewsController.js?v=10"></script>
+	<script src="<?php echo base_url(); ?>app/controllers/UsersController.js?v=10"></script>
+	<script src="<?php echo base_url(); ?>app/controllers/ProfileController.js?v=10"></script>
 
 	<style>
 		table {
@@ -90,7 +90,7 @@ header("location: login");
 					<span class="icon-bar"></span>
 					<span class="icon-bar"></span>
 				</button>
-				<a class="navbar-brand" href="#">Bebras-review</a>
+				<a class="navbar-brand" href="#/">Bebras-review</a>
 			</div>
 			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 				<ul class="nav navbar-nav">
@@ -100,7 +100,7 @@ header("location: login");
 					<li><a href="#/Users">Users</a></li>
 					<li><a href="#/Profile">Profile</a></li>
 				</ul>
-				<b id="logout" style="float:right;padding:10px;"><a href="logout">Logout</a></b>
+				<b id="logout" style="float:right;padding:10px;"><a href="/user_auth/logout">Logout</a></b>
 			</div>
 		</div>
 	</nav>

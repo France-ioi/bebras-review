@@ -13,10 +13,6 @@ app.config(['$routeProvider',
                 templateUrl: baseurl+'templates/view/Presentation.html',
                 controller: 'PresentationController'
             }).
-            when('/Tasks', {
-                templateUrl: baseurl+'templates/view/Tasks.html',
-                controller: 'TasksController'
-            }).
             when('/Tasks/General', {
                 templateUrl: baseurl+'templates/view/tasksgeneral.html',
                 controller: 'GeneralController'
@@ -45,6 +41,14 @@ app.config(['$routeProvider',
                 templateUrl: baseurl+'templates/view/tasksDiscussion.html',
                 controller: 'DiscussionController'
             }).
+            when('/Tasks/:taskId', {
+                templateUrl: baseurl+'templates/view/Tasks.html',
+                controller: 'TasksController'
+            }).
+            when('/Tasks', {
+                templateUrl: baseurl+'templates/view/Tasks.html',
+                controller: 'TasksController'
+            }).
             when('/Reviews', {
                 templateUrl: baseurl+'templates/view/Reviews.html',
                 controller: 'ReviewsController'
@@ -57,4 +61,18 @@ app.config(['$routeProvider',
                 templateUrl: baseurl+'templates/view/Profile.html',
                 controller: 'ProfileController'
             });
+}]);
+
+app.run(['$route', '$rootScope', '$location', function ($route, $rootScope, $location) {
+    var original = $location.path;
+    $location.path = function (path, reload) {
+        if (reload === false) {
+            var lastRoute = $route.current;
+            var un = $rootScope.$on('$locationChangeSuccess', function () {
+                $route.current = lastRoute;
+                un();
+            });
+        }
+        return original.apply($location, [path]);
+    };
 }]);

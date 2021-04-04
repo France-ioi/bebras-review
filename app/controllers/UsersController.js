@@ -53,7 +53,7 @@ app.controller('UsersController', ['$scope', '$location',  'UsersServices', func
 
   $scope.listts = function (data)
   {
-    $location.url("Tasks?id="+data);
+    $location.path("/Tasks/"+data);
   }
 
   $scope.ch = function (id,member,data)

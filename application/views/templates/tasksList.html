@@ -52,7 +52,7 @@
     </tr>
   </thead>
   <tbody>
-    <tr ng-repeat="x in tasksList | orderBy : myOrderBy" ng-show="(ye=='0'||x.year==ye)&&(co=='0'||x.country==co)&&(ow=='0'||x.ownerName==ow)&&(gr=='0'||x.Group==gr)&&(st=='0'||x.status==st)&&(re=='0'||x.reviewers[re])" ng-click="select(x.folderName)">
+    <tr ng-repeat="x in tasksList | orderBy : myOrderBy" ng-show="(ye=='0'||x.year==ye)&&(co=='0'||x.country==co)&&(ow=='0'||x.ownerName==ow)&&(gr=='0'||x.Group==gr)&&(st=='0'||x.status==st)&&(re=='0'||x.reviewers[re])" ng-click="select(x.textID)">
       <td> {{x.folderName}} </td>
       <td> {{x.year}} </td>
       <td> {{x.country}} </td>

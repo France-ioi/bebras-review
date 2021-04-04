@@ -81,9 +81,9 @@
             </td>
             <td> 
             <div class="dropdown">
-                <button class="dropbtn" style="z-index: 0;">Tasks{{x.folderName}}</button>
+                <button class="dropbtn" style="z-index: 0;">Tasks</button>
                 <div class="dropdown-content" style="z-index: 1;">
-                    <p ng-repeat="item in list[x.ID]"  ng-click="listts(item.folderName)">{{item.folderName}}</p>
+                    <p ng-repeat="item in x.reviewIds"  ng-click="listts(item)">{{item}}</p>
                 </div>
             </div>
             </td>
