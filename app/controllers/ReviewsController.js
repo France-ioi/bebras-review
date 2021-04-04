@@ -6,7 +6,7 @@ app.controller('ReviewsController', ['$scope',  'ReviewsServices', function($sco
       $scope.show("Failed");
     });
   }
-  $scope.data="loading";
+  $scope.data = [];
   $scope.authorlist=new Array();
   $scope.yearlist=new Array();
   $scope.countrylist=new Array();
@@ -15,54 +15,47 @@ app.controller('ReviewsController', ['$scope',  'ReviewsServices', function($sco
   $scope.co="0";
   $scope.au="0";
   $scope.ye="0";
+  $scope.isAdmin = false;
+  $scope.myOrderBy="author";
 
   $scope.show = function(data)
   {
-    $scope.data=data;
-    var i,j;
-    var length=0;
+    $scope.isAdmin = data.isAdmin;
+    $scope.data = data.result;
 
-    for(i=0;i<$scope.data.length;i++)
+    $scope.authorlist = [];
+    $scope.yearlist = [];
+    $scope.countrylist = [];
+    $scope.grouplist = [];
+
+    for(var i=0; i < $scope.data.length; i++)
     {
-      for(j=0;j<i;j++)
-        if(data[i].author==data[j].author)
-          break;
-      if(i==j)
-        $scope.authorlist[length++]=data[i].author;
+        var item = $scope.data[i];
+        if($scope.authorlist.indexOf(item.author) == -1) {
+            $scope.authorlist.push(item.author);
+        }
+        if($scope.yearlist.indexOf(item.year) == -1) {
+            $scope.yearlist.push(item.year);
+        }
+        if($scope.countrylist.indexOf(item.country) == -1) {
+            $scope.countrylist.push(item.country);
+        }
+        if($scope.grouplist.indexOf(item.group) == -1) {
+            $scope.grouplist.push(item.group);
+        }
     }
-
-    length=0;
-    for(i=0;i<$scope.data.length;i++)
-    {
-      for(j=0;j<i;j++)
-        if(data[i].year==data[j].year)
-          break;
-      if(i==j)
-        $scope.yearlist[length++]=data[i].year;
-    }
-
-    length=0;
-    for(i=0;i<$scope.data.length;i++)
-    {
-      for(j=0;j<i;j++)
-        if(data[i].country==data[j].country)
-          break;
-      if(i==j)
-        $scope.countrylist[length++]=data[i].country;
-    }
-
-    length=0;
-    for(i=0;i<$scope.data.length;i++)
-    {
-      for(j=0;j<i;j++)
-        if(data[i].Group==data[j].Group)
-          break;
-      if(i==j)
-        $scope.grouplist[length++]=data[i].Group;
-    }
-
-    $scope.myOrderBy="author";
   }
+
+  $scope.autoAssigned = false;
+
+  $scope.autoassign = function() {
+    $scope.autoAssigned = null;
+    ReviewsServices.autoassign(function(response) {
+      $scope.autoAssigned = response.data.assignments.length;
+      }, function(response) {
+      $scope.autoAssigned = 'error';
+      });
+  };
 
 //myOrderBy au ye co gr
   $scope.action();

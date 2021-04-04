@@ -512,4 +512,14 @@ $config['rewrite_short_tags'] = FALSE;
 */
 $config['proxy_ips'] = '';
 
+// Enable auto-assignment of reviews
+$config['autoassign_enable'] = false;
+// Target number of reviews per task
+$config['autoassign_target'] = 3;
+// Number of reviews a reviewer accepting "as many reviews as needed" will get
+$config['autoassign_unlimited_is'] = 10;
+
+// Password for the cron
+$config['cron_password'] = null;
+
 include_once('config_local.php');

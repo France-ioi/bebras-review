@@ -38,7 +38,8 @@
             <i class="fa fa-fw fa-sort" ng-if="myOrderBy!='LastLoginDate'&&myOrderBy!='-LastLoginDate'"></i>
             <i class="fa fa-fw fa-sort-asc" ng-if="myOrderBy=='LastLoginDate'"></i>
             <i class="fa fa-fw fa-sort-desc" ng-if="myOrderBy=='-LastLoginDate'"></i></th>
-            <th># of Reviews</th>
+            <th>Assigned reviews done/total (desired)</th>
+            <th>Total reviews done</th>
             <th>Role</th>
             <th>Group</th>
             <th>Role in Group</th>
@@ -54,7 +55,8 @@
             <td> {{x.country}} </td>
             <td> {{x.registrationDate}} </td>
             <td> {{x.LastLoginDate}} </td>
-            <td> {{x.Reviews}} </td>
+            <td> {{ x.nbReviewsAssignedDone }} / {{ x.nbReviewsAssigned }} ({{x.nbReviewsDesired|reviewsDesired }}) </td>
+            <td> {{ x.nbReviewsDone }} </td>
             <td ng-if="!isAdmin || x.ID == ownID">{{x.role}}</td>
             <td ng-if="!isAdmin">{{x.Group}}</td>
             <td ng-if="!isAdmin">{{x.groupRole}}</td>

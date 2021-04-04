@@ -38,3 +38,20 @@ app.directive('starRating', function () {
         }
     }
 });
+
+
+app.filter('reviewsDesired', function() {
+    return function(value) {
+        if(value === 0) {
+            return '[unset]';
+        } else if(value == -1) {
+            return '0';
+        } else if(value == -2) {
+            return '10-15';
+        } else if(value == -3) {
+            return '∞';
+        } else {
+            return value;
+        }
+    };
+});

@@ -35,7 +35,7 @@
       <i class="fa fa-fw fa-sort-asc" ng-if="myOrderBy=='status'"></i>
       <i class="fa fa-fw fa-sort-desc" ng-if="myOrderBy=='-status'"></i></th>
 
-      <th ng-click="myOrderBy=((myOrderBy=='Reviews')?'-Reviews':'Reviews')">Reviews
+      <th ng-click="myOrderBy=((myOrderBy=='Reviews')?'-Reviews':'Reviews')">Reviews done/assigned
       <i class="fa fa-fw fa-sort" ng-if="myOrderBy!='Reviews'&&myOrderBy!='-Reviews'"></i>
       <i class="fa fa-fw fa-sort-asc" ng-if="myOrderBy=='Reviews'"></i>
       <i class="fa fa-fw fa-sort-desc" ng-if="myOrderBy=='-Reviews'"></i></th>
@@ -61,7 +61,7 @@
       <td> {{x.importDate}} </td>
       <td> {{x.Group}} </td>
       <td> {{x.status}} </td>
-      <td> {{x.Reviews}} </td>
+      <td> {{x.nbReviewsDone}} / {{x.nbReviewsAssigned}} </td>
       <td> {{x.ar}} </td>
       <td> {{x.p}} </td>
     </tr>

@@ -11,7 +11,17 @@ app.factory('ReviewsServices', function($http) {
     });
   }
 
+  function autoassign(onSuccess, onError){
+    $http.post(baseurl+'templates/autoassign', {}).
+    then(function(response) {
+      onSuccess(response);
+    }, function(response) {
+      onError(response);
+    });
+  }
+
   return {
-    action: action
+    action: action,
+    autoassign: autoassign
   }
 });

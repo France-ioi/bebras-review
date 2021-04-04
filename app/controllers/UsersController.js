@@ -39,11 +39,6 @@ app.controller('UsersController', ['$scope', '$location',  'UsersServices', func
     $scope.groupsList = data.groupsList;
     $scope.ownID = data.ownID;
     $scope.isAdmin = data.isAdmin;
-    var i=0;
-    for(i=0;i<usersList.length;i++)
-    {
-      $scope.listtasks(usersList[i]['ID']);
-    }
 
     var length=0;
     for(i=0;i<usersList.length;i++)

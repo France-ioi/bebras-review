@@ -7,6 +7,15 @@ class presentation_model extends CI_Model {
 	{
 		$this->load->database();
 	}
+
+    public function isAdmin()
+    {
+        return true;
+    	$username = ($this->session->userdata['logged_in']['username']);
+    	$user = $this->db->get_where('users',array('username'=>$username))->result_array()[0];
+        return $user['role'] == 'Admin';
+    }
+
 	public function getdata()
 	{
         // TODO :: temporary until i have time to figure out how this db object
@@ -51,7 +60,8 @@ class presentation_model extends CI_Model {
             $reviewresult=$review->result_array();
             $sumCurrent = 0;
             $sumPotential = 0;
-            $nbreviews = 0;
+            $nbReviewsDone = 0;
+            $nbReviewsAssigned = 0;
             $nbReviewsCurrent = 0;
             $nbReviewsPotential = 0;
 
@@ -59,6 +69,7 @@ class presentation_model extends CI_Model {
             for($j=0;$j<$review->num_rows();$j++) {
                 if($reviewresult[$j]['isAssigned'] == 1) {
                     $result[$i]['reviewers'][$reviewresult[$j]['userID']] = $userID_to_name[$reviewresult[$j]['userID']];
+                    $nbReviewsAssigned++;
                 }
                 if($reviewresult[$j]['isPublished'] == 1) {
                   $sumCurrent += $reviewresult[$j]['currentRating'];
@@ -69,7 +80,7 @@ class presentation_model extends CI_Model {
                   if ($reviewresult[$j]['potentialRating'] > 0) {
                      $nbReviewsPotential += 1;
                   }
-                  $nbreviews += 1;
+                  $nbReviewsDone++;
                 }
 			}
             if($nbReviewsCurrent > 0) {
@@ -82,7 +93,8 @@ class presentation_model extends CI_Model {
             } else {
                $result[$i]['p'] = 0;
             }
-            $result[$i]['Reviews'] = $nbreviews;
+            $result[$i]['nbReviewsAssigned'] = $nbReviewsAssigned;
+            $result[$i]['nbReviewsDone'] = $nbReviewsDone;
 
             if($result[$i]['htmlFileName']) {
                 $result[$i]['htmlLink'] = $this->config->item('svn_reldir') . $result[$i]['folderPath'] . '/' . $result[$i]['folderName'] . '/' . $result[$i]['htmlFileName'];
@@ -152,7 +164,8 @@ class presentation_model extends CI_Model {
 	}
 	public function getreviews()
 	{
-		$reviews = $this->db->get_where('reviews', array('isPublished' => 1));
+        $where = $this->isAdmin() ? [] : ['isPublished' => 1];
+		$reviews = $this->db->get_where('reviews', $where);
 		$result = $reviews->result_array();
 		for($i=0;$i<$reviews->num_rows();$i++)
 		{
@@ -177,7 +190,7 @@ class presentation_model extends CI_Model {
 			$result[$i]['author']=$user[0]['firstName'] . ' ' . $user[0]['lastName'];
 		}
 
-		return $result;
+		return ['isAdmin' => $this->isAdmin(), 'result' => $result];
 	}
 	public function getuser()
 	{
@@ -196,8 +209,22 @@ class presentation_model extends CI_Model {
             } else {
               $result[$i]['Group'] = $group->result_array()[0]['name'];
             }
-			$review = $this->db->get_where('reviews',array('userID'=>$result[$i]['ID']));
-			$result[$i]['Reviews']=$review->num_rows();
+			$result[$i]['nbReviewsDone'] = 0;
+			$result[$i]['nbReviewsAssigned'] = 0;
+			$result[$i]['nbReviewsAssignedDone'] = 0;
+			foreach($this->db->get_where('reviews', ['userID' => $result[$i]['ID']])->result_array() as $review) {
+                $done = $review['isPublished'] == 1;
+                $assigned = $review['isAssigned'] == 1;
+                if($assigned) {
+			        $result[$i]['nbReviewsAssigned']++;
+                    if($done) {
+    			        $result[$i]['nbReviewsAssignedDone']++;
+                    }
+                }
+                if($done) {
+    			    $result[$i]['nbReviewsDone']++;
+                }
+            }
             unset($result[$i]['salt']);
             unset($result[$i]['password']);
 		}
@@ -260,6 +287,8 @@ class presentation_model extends CI_Model {
         }
 
         $this->db->update('users', $newdata, array('ID' => $user['ID']));
+
+        $this->autoassign();
 
         return $this->getprofile();
 	}
@@ -520,9 +549,8 @@ class presentation_model extends CI_Model {
 	}
 	public function getlist()
 	{
-		$reviews = $this->db->get_where('tasks');
-		$result = $reviews->result_array();
-		return $result;
+		$tasks = $this->db->get('tasks')->result_array();
+		return $tasks;
 	}
 	public function sendmess()
 	{
@@ -615,6 +643,121 @@ class presentation_model extends CI_Model {
 		$this->db->update('users',array('autoLoadTasks'=>"true"),array('username'=>$username)); // TODO :: uh, always true?
 	}
 
+    public function autoassign() {
+        if(!$this->config->item('autoassign_enable')) { return; }
+
+        $targetNb = $this->config->item('autoassign_target');
+        $unlimitedIs = $this->config->item('autoassign_unlimited_is');
+
+        // Check rights
+        if(!$this->isAdmin()) { return; }
+
+        // Get all tasks data
+        $tasks = [];
+        foreach($this->db->get('tasks')->result_array() as $task) {
+            $taskID = $task['ID'];
+            $newTask = ['ID' => $taskID, 'folderName' => $task['folderName'], 'countryCode' => $task['countryCode']];
+            $newTask['reviews'] = $this->db->get_where('reviews', ['taskID' => $taskID])->result_array();
+            $newTask['nbReviews'] = count($newTask['reviews']);
+            $tasks[$taskID] = $newTask;
+        }
+        function taskcmp($a, $b) {
+            return $b['nbReviews'] - $a['nbReviews'];
+        }
+
+        // Get all users data
+        $userInfo = [];
+        foreach($this->db->get('users')->result_array() as $user) {
+            $userID = $user['ID'];
+            $userInfo[$userID] = ['countryCode' => $user['countryCode'], 'countriesDone' => [$user['countryCode']]];
+            $nbd = $user['nbReviewsDesired'];
+            if($nbd == 0 || $nbd == -1) {
+                $userInfo[$userID]['nbReviewsDesired'] = 0;
+            } elseif($nbd == -2) {
+                $userInfo[$userID]['nbReviewsDesired'] = 10;
+            } elseif($nbd == -3) {
+                $userInfo[$userID]['nbReviewsDesired'] = $unlimitedIs;
+            } else {
+                $userInfo[$userID]['nbReviewsDesired'] = 0 + $nbd;
+            }
+            $userInfo[$userID]['nbReviewsLeft'] = $userInfo[$userID]['nbReviewsDesired'];
+        }
+
+        foreach($this->db->get('reviews')->result_array() as $review) {
+            $userID = $review['userID'];
+            if(!isset($userInfo[$userID])) { continue; }
+            $userInfo[$userID]['nbReviewsLeft']--;
+            $countryCode = $tasks[$review['taskID']]['countryCode'];
+            if(!in_array($countryCode, $userInfo[$userID]['countriesDone'])) {
+                $userInfo[$userID]['countriesDone'][] = $countryCode;
+            }
+        }
+
+        usort($tasks, "taskcmp");
+
+        // Assign reviews
+        $assignments = [];
+        $continueAssigning = true;
+        while($continueAssigning) {
+            $continueAssigning = false;
+            foreach($tasks as &$task) {
+                if($task['nbReviews'] >= $targetNb) { continue; }
+
+                // Get users which can review this task (have reviews left,
+                // aren't from the same country)
+                $possibleUsers = [];
+                $countryCode = $task['countryCode'];
+                foreach($userInfo as $userID => $info) {
+                    if($info['countryCode'] == $countryCode || $info['nbReviewsLeft'] <= 0) { continue; }
+                    $score = $info['nbReviewsLeft'];
+                    $score += in_array($countryCode, $info['countriesDone']) ? 0 : 100;
+                    $possibleUsers[$userID] = $score;
+                }
+                arsort($possibleUsers);
+
+                if(count($possibleUsers) == 0) { continue; }
+
+                // Get all users with the highest priority score
+                $maxScore = null;
+                $bestUsers = [];
+                foreach($possibleUsers as $userID => $score) {
+                    if($maxScore === null) {
+                        $maxScore = $score;
+                    } elseif($score != $maxScore) {
+                        break;
+                    }
+                    $bestUsers[] = $userID;
+                }
+                // Get a random user
+                $targetUser = $bestUsers[array_rand($bestUsers)];
+
+                // Update data
+                if(!in_array($countryCode, $userInfo[$targetUser]['countriesDone'])) {
+                    $userInfo[$targetUser]['countriesDone'][] = $countryCode;
+                }
+                $userInfo[$targetUser]['nbReviewsLeft']--;
+                $task['nbReviews']++;
+
+                $assignments[] = ['userID' => $targetUser, 'taskID' => $task['ID']];
+                $continueAssigning = true;
+            }
+        }
+
+        // Add assignments to DB
+        foreach($assignments as $assignment) {
+            $this->db->insert('reviews', [
+                'userID' => $assignment['userID'],
+                'taskID' => $assignment['taskID'],
+                'currentRating' => 0,
+                'potentialRating' => 0,
+                'isAssigned' => 1,
+                'isPublished' => 0
+                ]);
+        }
+
+        return ['assignments' => $assignments];
+    }
+
     public function recupdatesvn($baseDir, $dir) {
         $dirFullPath = $baseDir . $dir;
         $dirName = basename($dirFullPath);
@@ -629,7 +772,14 @@ class presentation_model extends CI_Model {
 
             $newItem['year'] = substr($dirName, 0, 4);
             $newItem['countryCode'] = substr($dirName, 5, 2);
-            $newItem['textID'] = substr($dirName, 0, 10);
+            $newItem['textID'] = strtoupper(substr($dirName, 0, 10));
+
+            // Detect additional character
+            $additionalChar = strtolower(substr($dirName, 10, 1));
+            $ord = ord($additionalChar);
+            if($ord >= 97 && $ord <= 122) {
+                $newItem['textID'] .= $additionalChar;
+            }
 
             $newItem['importDate'] = date('y-m-d');
 
@@ -666,17 +816,14 @@ class presentation_model extends CI_Model {
                 }
             }
 
-			$check = $this->db->get_where('tasks',array('folderName' => $newItem["folderName"]));
-			if($check->num_rows() == 0)
+			$check = $this->db->get_where('tasks', ['textID' => $newItem['textID']]);
+			if($check->num_rows() == 0) {
 				$this->db->insert('tasks', $newItem);
-			else
-			{
+			} else {
+                unset($newItem['importDate']);
 				$this->db->update('tasks',
-                    array('htmlFileName' => $newItem['htmlFileName'],
-                          'pdfFileName' => $newItem['pdfFileName'],
-                          'odtFileName' => $newItem['odtFileName'],
-                          'lastChangeDate' => $newItem['lastChangeDate']),
-                    array('folderName' => $newItem["folderName"]));
+                    $newItem,
+                    ['textID' => $newItem['textID']]);
 			}
             $count += 1;
         } else {
@@ -691,13 +838,18 @@ class presentation_model extends CI_Model {
         return $count;
     }
 
-	public function updatesvn()
+    public function cron()
+    {
+        $password = $this->config->item('cron_password');
+        if(!$password || $_GET['password'] != $password) { return; }
+        $this->updatesvn(true);
+        $this->autoassign();
+    }
+
+	public function updatesvn($cron = false)
 	{
-		$username = ($this->session->userdata['logged_in']['username']);
-		$user = $this->db->get_where('users',array('username'=>$username))->result_array()[0];
-        if($user['role'] != 'Admin') {
-            return false;
-        }
+        // Check rights
+        if(!$cron && !$this->isAdmin()) { return; }
 
 		ini_set('max_execution_time', 3600);
 	
@@ -726,11 +878,7 @@ class presentation_model extends CI_Model {
         // Export reviews to SVN
 
         // Check rights
-    	$username = ($this->session->userdata['logged_in']['username']);
-    	$user = $this->db->get_where('users',array('username'=>$username))->result_array()[0];
-        if($user['role'] != 'Admin') {
-            return;
-        }
+        if(!$this->isAdmin()) { return; }
 
         // Initialize
     	ini_set('max_execution_time', 3600);
@@ -795,6 +943,15 @@ class presentation_model extends CI_Model {
                     $fileContents .= "It's informatics section: Can be improved\n";
                 } elseif($review['itsInformatics'] == 'missing') {
                     $fileContents .= "It's informatics section: Missing\n";
+                }
+                if($review['ageDifficulty'] == 'easier') {
+                    $fileContents .= "Combination of age group and difficulty level: The task looks easier than indicated\n";
+                } elseif($review['ageDifficulty'] == 'good') {
+                    $fileContents .= "Combination of age group and difficulty level: The level is good\n";
+                } elseif($review['ageDifficulty'] == 'hard') {
+                    $fileContents .= "Combination of age group and difficulty level: The task looks harder than indicated\n";
+                } elseif($review['ageDifficulty'] == 'missing') {
+                    $fileContents .= "Combination of age group and difficulty level: Missing\n";
                 }
                 $fileContents .= $review['comment'] . "\n";
                 $fileContents .= str_repeat('=', 40) . "\n";

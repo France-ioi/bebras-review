@@ -116,6 +116,8 @@ app.controller('TasksController', ['$scope', '$location', '$sce', 'TasksServices
     var i,j;
     var length=0;
 
+    tasksList.sort(function(a, b) { return a.textID < b.textID ? -1 : 1; });
+
     // TODO :: better logic to make the lists...
     for(i=0;i<tasksList.length;i++)
     {
