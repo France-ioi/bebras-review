@@ -10,7 +10,6 @@ class presentation_model extends CI_Model {
 
     public function isAdmin()
     {
-        return true;
     	$username = ($this->session->userdata['logged_in']['username']);
     	$user = $this->db->get_where('users',array('username'=>$username))->result_array()[0];
         return $user['role'] == 'Admin';
@@ -844,6 +843,7 @@ class presentation_model extends CI_Model {
         if(!$password || $_GET['password'] != $password) { return; }
         $this->updatesvn(true);
         $this->autoassign();
+        $this->commitsvn();
     }
 
 	public function updatesvn($cron = false)
@@ -874,11 +874,11 @@ class presentation_model extends CI_Model {
         return $count;
 	}
 
-    public function commitsvn() {
+    public function commitsvn($cron = false) {
         // Export reviews to SVN
 
         // Check rights
-        if(!$this->isAdmin()) { return; }
+        if(!$cron && !$this->isAdmin()) { return; }
 
         // Initialize
     	ini_set('max_execution_time', 3600);
