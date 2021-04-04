@@ -158,6 +158,7 @@ class presentation_model extends CI_Model {
 		}
 
         $response['reviewsList'] = $result;
+        $response['rejected'] = $this->db->get_where('rejected', ['userID' => $this->session->userdata['logged_in']['ID']])->result_array();
         $response['messagesList'] = $this->getmessage();
 	
 		return $response;
@@ -574,6 +575,13 @@ class presentation_model extends CI_Model {
 		return $_POST;
 	}
 
+    public function reject()
+    {
+        $this->db->insert('rejected', ['taskID' => $_POST['taskID'], 'userID' => $this->session->userdata['logged_in']['ID'], 'reason' => $_POST['reason']]);
+        $this->db->delete('reviews', ['taskID' => $_POST['taskID'], 'userID' => $this->session->userdata['logged_in']['ID']]);
+        $this->autoassign(true);
+    }
+
 	public function profilelisttasks()
 	{
         $username = ($this->session->userdata['logged_in']['username']);
@@ -651,9 +659,10 @@ class presentation_model extends CI_Model {
 	}
 
     public function autoassign($internal=false) {
-        if(!$this->config->item('autoassign_enable')) { return; }
+        if(!$this->config->item('autoassign_enable')) { return ['assignments' => []]; }
 
         $targetNb = $this->config->item('autoassign_target');
+        $largeIs = $this->config->item('autoassign_large_is');
         $unlimitedIs = $this->config->item('autoassign_unlimited_is');
 
         // Check rights
@@ -664,12 +673,13 @@ class presentation_model extends CI_Model {
         foreach($this->db->get('tasks')->result_array() as $task) {
             $taskID = $task['ID'];
             $newTask = ['ID' => $taskID, 'folderName' => $task['folderName'], 'countryCode' => $task['countryCode']];
-            $newTask['reviewers'] = [];
+            $newTask['cantReview'] = [];
             $newTask['nbReviews'] = 0;
+            $newTask['sortSalt'] = mt_rand(0, 90) / 100;
             $tasks[$taskID] = $newTask;
         }
         function taskcmp($a, $b) {
-            return $b['nbReviews'] - $a['nbReviews'];
+            return ($a['nbReviews'] + $a['sortSalt'] - $b['nbReviews'] - $b['sortSalt']) * 100;
         }
 
         // Get all users data
@@ -694,7 +704,7 @@ class presentation_model extends CI_Model {
             $userID = $review['userID'];
             if(!isset($userInfo[$userID])) { continue; }
             $userInfo[$userID]['nbReviewsLeft']--;
-            $tasks[$review['taskID']]['reviewers'][] = $userID;
+            $tasks[$review['taskID']]['cantReview'][] = $userID;
             $tasks[$review['taskID']]['nbReviews']++;
             $countryCode = $tasks[$review['taskID']]['countryCode'];
             if(!in_array($countryCode, $userInfo[$userID]['countriesDone'])) {
@@ -702,13 +712,19 @@ class presentation_model extends CI_Model {
             }
         }
 
-        usort($tasks, "taskcmp");
+        foreach($this->db->get('rejected')->result_array() as $rejected) {
+            $tasks[$rejected['taskID']]['cantReview'][] = $rejected['userID'];
+        }
 
         // Assign reviews
         $assignments = [];
         $continueAssigning = true;
+        $assignCountriesDone = false;
         while($continueAssigning) {
             $continueAssigning = false;
+
+            usort($tasks, "taskcmp");
+
             foreach($tasks as &$task) {
                 if($task['nbReviews'] >= $targetNb) { continue; }
 
@@ -717,9 +733,14 @@ class presentation_model extends CI_Model {
                 $possibleUsers = [];
                 $countryCode = $task['countryCode'];
                 foreach($userInfo as $userID => $info) {
-                    if($info['countryCode'] == $countryCode || $info['nbReviewsLeft'] <= 0 || in_array($userID, $task['reviewers'])) { continue; }
+                    if($info['countryCode'] == $countryCode || $info['nbReviewsLeft'] <= 0 || in_array($userID, $task['cant_review'])) { continue; }
                     $score = $info['nbReviewsLeft'];
-                    $score += in_array($countryCode, $info['countriesDone']) ? 0 : 100;
+                    if(in_array($countryCode, $info['countriesDone'])) {
+                        if(!$assignCountriesDone) {
+                            continue;
+                        }
+                        $score += in_array($countryCode, $info['countriesDone']) ? 0 : 100;
+                    }
                     $possibleUsers[$userID] = $score;
                 }
                 arsort($possibleUsers);
@@ -749,6 +770,12 @@ class presentation_model extends CI_Model {
 
                 $assignments[] = ['userID' => $targetUser, 'taskID' => $task['ID']];
                 $continueAssigning = true;
+                $assignCountriesDone = false;
+            }
+
+            if(!$continueAssigning && !$assignCountriesDone) {
+                $continueAssigning = true;
+                $assignCountriesDone = true;
             }
         }
 
@@ -764,7 +791,7 @@ class presentation_model extends CI_Model {
                 ]);
         }
 
-        return ['assignments' => $assignments];
+        return ['assignments' => $assignments, 'tasks' => $tasks];
     }
 
     public function recupdatesvn($baseDir, $dir) {

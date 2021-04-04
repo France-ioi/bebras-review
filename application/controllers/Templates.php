@@ -143,6 +143,11 @@ class Templates extends CI_Controller {
 		echo json_encode($data);
 	}
 
+    public function reject()
+    {
+        echo json_encode($this->presentation_model->reject());
+    }
+
 	public function group()
 	{
 		$data = $this->presentation_model->group();

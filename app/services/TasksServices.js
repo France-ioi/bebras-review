@@ -107,6 +107,20 @@ app.factory('TasksServices', function($http) {
     });
   }
 
+  function reject(data, onSuccess, onError){
+    var config = {
+        headers:{
+          'Content-Type': 'application/x-www-form-urlencoded;'
+        }
+    };
+    $http.post(baseurl+'templates/reject', $.param(data), config)
+    .then(function(response) {
+      onSuccess(response);
+    }, function(response) {
+      onError(response);
+    });
+  }
+
   function lastsave(data,onSuccess,onError){
     var dat = $.param({
                 data
@@ -140,6 +154,7 @@ app.factory('TasksServices', function($http) {
     reviewcreate: reviewcreate,
     sendmess: sendmess,
     changemess: changemess,
+    reject: reject,
     lastsave: lastsave,
     grlist: grlist,
     updatesvn: updatesvn,

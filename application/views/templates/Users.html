@@ -41,9 +41,7 @@
             <th>Assigned reviews done/total (desired)</th>
             <th>Total reviews done</th>
             <th>Role</th>
-            <th>Group</th>
-            <th>Role in Group</th>
-            <th> Tasks </th>
+            <th>Tasks reviewed or assigned</th>
         </tr>
     </thead>
     <tbody>
@@ -58,8 +56,6 @@
             <td> {{ x.nbReviewsAssignedDone }} / {{ x.nbReviewsAssigned }} ({{x.nbReviewsDesired|reviewsDesired }}) </td>
             <td> {{ x.nbReviewsDone }} </td>
             <td ng-if="!isAdmin || x.ID == ownID">{{x.role}}</td>
-            <td ng-if="!isAdmin">{{x.Group}}</td>
-            <td ng-if="!isAdmin">{{x.groupRole}}</td>
             <td ng-if="isAdmin && x.ID != ownID">
               <select ng-model="x.role" ng-change="ch(x.ID,'role',x.role)">
                 <option ng-selected="x.role == 'Unconfirmed'">Unconfirmed</option>
@@ -67,21 +63,10 @@
                 <option ng-selected="x.role == 'Admin'">Admin</option>
               </select>
             </td>
-            <td ng-if="isAdmin">
-              <select ng-model="x.groupID" ng-change="ch(x.ID, 'groupID', x.groupID)">
-                <option ng-selected="x.groupID == 0" value="0">No group</option>
-                <option ng-repeat="g in groupsList" ng-selected="x.groupID == g.ID" ng-value="g.ID">{{ g.name }}</option>
-              </select>
-            </td>
-            <td ng-if="isAdmin">
-              <select ng-model="x.groupRole" ng-change="ch(x.ID,'groupRole',x.groupRole)">
-                <option ng-selected="x.groupRole == 'Member'">Member</option>
-                <option ng-selected="x.groupRole == 'Admin'">Admin</option>
-              </select>
-            </td>
             <td> 
-            <div class="dropdown">
-                <button class="dropbtn" style="z-index: 0;">Tasks</button>
+            <span ng-if="!x.reviewIds.length" class="glyphicon glyphicon-minus"></span>
+            <div class="dropdown" ng-if="x.reviewIds.length">
+                <button class="dropbtn" style="z-index: 0;">Tasks<span class="glyphicon glyphicon-chevron-down"></span></button>
                 <div class="dropdown-content" style="z-index: 1;">
                     <p ng-repeat="item in x.reviewIds"  ng-click="listts(item)">{{item}}</p>
                 </div>

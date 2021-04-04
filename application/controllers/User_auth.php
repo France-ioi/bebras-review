@@ -37,8 +37,8 @@ public function new_user_registration() {
 
 	// Check validation for user input in SignUp form
 	$this->form_validation->set_rules('username', 'Username', 'trim|required');
-	$this->form_validation->set_rules('firstName', 'Username', 'trim|required');
-	$this->form_validation->set_rules('lastName', 'Username', 'trim|required');
+	$this->form_validation->set_rules('firstName', 'First name', 'trim|required');
+	$this->form_validation->set_rules('lastName', 'Last name', 'trim|required');
 	$this->form_validation->set_rules('email_value', 'Email', 'trim|required');
 	$this->form_validation->set_rules('password', 'Password', 'trim|required');
 	if ($this->form_validation->run() == FALSE) {
@@ -89,6 +89,7 @@ public function user_login_process() {
             $result = $this->login_database->read_user_information($username);
             if ($result !=     false) {
                 $session_data = array(
+                    'ID' => $result[0]->ID,
                     'username' => $result[0]->username,
                     'username1' => $result[0]->lastName, // TODO :: add more data
                     'email' => $result[0]->email,

@@ -49,6 +49,7 @@ app.controller('UsersController', ['$scope', '$location',  'UsersServices', func
       if(i==j)
         $scope.countrylist[length++]=usersList[i].country;
     }
+    $scope.countrylist.sort();
   }
 
   $scope.listts = function (data)

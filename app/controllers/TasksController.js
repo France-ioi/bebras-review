@@ -52,6 +52,7 @@ app.controller('TasksController', ['$scope', '$location', '$routeParams', '$sce'
   $scope.reviewerIDlist=new Array();
   $scope.reviewerlist=new Array();
   $scope.re="0";
+  $scope.isRejected = false;
 
   // Files views
   $scope.toggleflag = false;
@@ -201,6 +202,11 @@ app.controller('TasksController', ['$scope', '$location', '$routeParams', '$sce'
       }
     }
 
+    $scope.isRejected = {};
+    for(var i = 0; i < data.rejected.length; i++) {
+        $scope.isRejected[data.rejected[i]['taskID']] = true;
+    };
+
     if(initial) {
       // First load of the page
       if($routeParams['taskId']) {
@@ -337,6 +343,28 @@ app.controller('TasksController', ['$scope', '$location', '$routeParams', '$sce'
   $scope.$watch('sel', $scope.select);
 
   $scope.getTasks(true);
+
+
+  $scope.askedReject = false;
+  $scope.reject = function(type, rejectReason) {
+    switch(type) {
+      case 'ask':
+        $scope.askedReject = true;
+        break;
+      case 'cancel':
+        $scope.askedReject = false;
+        break;
+      case 'confirm':
+        var taskID = $scope.taskData.ID;
+        if(!taskID || !rejectReason) { return; }
+        TasksServices.reject({taskID: taskID, reason: rejectReason}, function() {
+            $scope.getTasks();
+        }, function() {
+            $scope.getTasks();
+        });
+        break;
+    }
+  };
 }]);
 
 /*

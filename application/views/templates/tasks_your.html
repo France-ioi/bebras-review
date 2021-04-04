@@ -1,10 +1,32 @@
-<div ng-if="hasReviews[sel]" class="col-md-6">
+<div ng-if="isRejected[taskData.ID]" class="alert alert-warning">
+    <b>You rejected being assigned this task for review.</b>
+</div>
+<div ng-if="hasReviews[sel]" class="well">
     <div ng-if="taskData.isAssigned == 1">
-      <i>You have been assigned this task for review.</i>
+        <p>
+            <b>You have been assigned this task for review.</b>
+            <button ng-show="!askedReject && taskData.isPublished == 0" class="btn btn-xs btn-danger" ng-click="reject('ask')">Reject assignment</button>
+        </p>
+        <div ng-show="askedReject">
+            <p><b>You are going to reject this review assignment, delete your review and mark that you don't want to review this task.</b></p>
+            <p>Please select a reason :
+            <select ng-model="rejectReason">
+                <option value="participated">I would be biased, as I took part in the preparation of this task</option>
+                <option value="biased">I would be biased, for a different reason</option>
+                <option value="time">I don't have time to review this task</option>
+                <option value="other">Other reason</option>
+            </select></p>
+            <p>
+                <button class="btn btn-default" ng-click="reject('cancel')">Cancel</button>
+                <button class="btn btn-danger" ng-disabled="!rejectReason" ng-click="reject('confirm', rejectReason)">Confirm reject</button>
+            </p>
+        </div>
     </div>
     <div ng-if="taskData.isAssigned == 0">
-      <i>You have <b>not</b> been assigned this task for review.</i>
+        <i>You have <b>not</b> been assigned this task for review.</i>
     </div>
+</div>
+<div ng-if="hasReviews[sel]" class="col-md-6">
     <br />
     <label class="pull-left" style="width:200px;"> Your rating as of now: </label>
     <div star-rating rating-value="taskData.currentRating" ng-click="reviewChanged()"></div>

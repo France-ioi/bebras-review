@@ -516,6 +516,8 @@ $config['proxy_ips'] = '';
 $config['autoassign_enable'] = false;
 // Target number of reviews per task
 $config['autoassign_target'] = 3;
+// Number of reviews a reviewer accepting "10-15 reviews" will get
+$config['autoassign_large_is'] = 10;
 // Number of reviews a reviewer accepting "as many reviews as needed" will get
 $config['autoassign_unlimited_is'] = 10;
 
