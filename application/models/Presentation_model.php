@@ -428,7 +428,7 @@ class presentation_model extends CI_Model {
         $users = $this->db->get_where('users',array('username'=>$username));
         $userID = $users->result_array()[0]['ID'];
 
-        $tasks = $this->db->get_where('tasks', array('folderName'=>$_POST['folderName']))->result_array();
+        $tasks = $this->db->get_where('tasks', array('textID'=>$_POST['folderName']))->result_array();
         $taskID = $tasks[0]['ID'];
         $newreview = array(
             'userID' => $userID,
