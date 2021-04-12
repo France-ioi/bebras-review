@@ -53,7 +53,24 @@
       <i>This review has not yet been published.</i>
     </div>
     <button id="reviewSaveBtn" ng-click="saveReview(taskData)" style="clear: both; margin:10px; float:right;" class="btn btn-primary">Save</button>
-    <button id="reviewResetBtn" ng-click="resetReview(taskData.reviewId)" style="margin:10px; float: right;" class="btn btn-danger">Delete</button>
+    <button id="reviewResetBtn" ng-hide="askedReset" ng-click="askReset()" style="margin:10px; float: right;" class="btn btn-danger">
+      <span ng-if="taskData.isAssigned == 1">Reset</span>
+      <span ng-if="taskData.isAssigned != 1">Delete</span>
+    </button>
+    <div class="clearfix"></div>
+    <div ng-show="askedReset" class="well">
+      <p>This will remove all data from your review.</p>
+      <p>
+        <button ng-click="cancelReset()" class="btn btn-default">
+          Cancel
+        </button>
+        <button ng-click="resetReview(taskData.reviewId)" class="btn btn-danger">
+          Confirm
+          <span ng-if="taskData.isAssigned == 1">reset</span>
+          <span ng-if="taskData.isAssigned != 1">deletion</span>
+        </button>
+      </p>
+    </div>
 </div>
 <div ng-if="!hasReviews[sel]">
     You haven't been assigned this task for review.

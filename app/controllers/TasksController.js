@@ -276,7 +276,16 @@ app.controller('TasksController', ['$scope', '$location', '$routeParams', '$sce'
     $('#reviewSaveBtn').text('Save').removeClass('btn-success').addClass('btn-primary');
   };
 
+  $scope.askedReset = false;
+  $scope.askReset = function() {
+    $scope.askedReset = true;
+  };
+  $scope.cancelReset = function() {
+    $scope.askedReset = false;
+  };
+
   $scope.resetReview = function(id) {
+    $scope.askedReset = false;
     $scope.chgReview(id, {
       currentRating: -1,
       potentialRating: -1,

@@ -40,3 +40,12 @@
 .modal-backdrop {
   z-index: 0 !important;
 }
+
+.navbar-btns > li {
+  cursor: pointer;
+}
+
+.navbar-btns > li > a.navbar-nolink {
+  cursor: not-allowed;
+  color: #ccc;
+}

@@ -48,11 +48,11 @@
         </div>
         <p class="navbar-text navbar-right" style="font-size: 24px;"><a ng-click="select(null)" style="color: #777; text-decoration: none; cursor: pointer;">&#10006;</a></p>
         <div class="collapse navbar-collapse">
-          <ul class="nav navbar-nav">
+          <ul class="nav navbar-nav navbar-btns">
             <li><a ng-click="goView('general')">Infos</a></li>
-            <li><a ng-click="goView('html')">HTML Version</a></li>
-            <li><a ng-click="goView('odt')">ODT Version</a></li>
-            <li><a ng-click="goView('pdf')">PDF Version</a></li>
+            <li><a ng-click="goView('html')" ng-class="!taskData.htmlLink ? 'navbar-nolink' : ''">HTML Version</a></li>
+            <li><a ng-click="goView('odt')" ng-class="!taskData.odtLink ? 'navbar-nolink' : ''">ODT Version</a></li>
+            <li><a ng-click="goView('pdf')" ng-class="!taskData.pdfLink ? 'navbar-nolink' : ''">PDF Version</a></li>
             <li><a ng-click="goView('your')">Your Review</a></li>
             <li><a ng-click="goView('all')">All Reviews</a></li>
 <!--            <li><a ng-click="goView('discussion')">Discussion</a></li>-->
