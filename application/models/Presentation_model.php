@@ -842,7 +842,7 @@ class presentation_model extends CI_Model {
                     continue;
                 } elseif($elem == 'index.html') {
                     $newItem['htmlFileName'] = $elem;
-                } elseif(substr($elem, 0, 10) == $newItem['textID']) {
+                } elseif(substr($elem, 0, strlen($newItem['textID'])) == $newItem['textID']) {
                     foreach(array('html', 'odt', 'pdf') as $ext) {
                         // We look for the first file with the expected filename
                         if($newItem[$ext.'FileName'] == '' && substr($elem, -strlen($ext)-1) == '.'.$ext) {
