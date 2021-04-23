@@ -63,7 +63,7 @@ app.controller('TasksController', ['$scope', '$location', '$routeParams', '$sce'
   // For reviews
   $scope.hasReviews = {};
 
-  $scope.curReviews = [];
+  $scope.doneReviews = [];
 
   $scope.select = function(newSel) {
     // Select a task
@@ -71,7 +71,7 @@ app.controller('TasksController', ['$scope', '$location', '$routeParams', '$sce'
     $scope.taskData = null;
     if(newSel) {
       $scope.sel = newSel;
-      $scope.curReviews = [];
+      $scope.doneReviews = [];
       for(i=0; i < $scope.tasksList.length; i++) {
         if($scope.tasksList[i].folderName == newSel || $scope.tasksList[i].textID == newSel) {
           $scope.sel = $scope.tasksList[i].textID;
@@ -80,7 +80,10 @@ app.controller('TasksController', ['$scope', '$location', '$routeParams', '$sce'
             var curReview = $scope.reviewsList[i];
             if($scope.taskData.folderName != curReview.folderName) { continue; }
 
-            $scope.curReviews.push(curReview);
+            if(curReview.isPublished) {
+              $scope.curReviews.push(curReview);
+            }
+
             if(curReview.isMine) {
               $scope.taskData.currentRating = curReview.currentRating;
               $scope.taskData.potentialRating = curReview.potentialRating;
