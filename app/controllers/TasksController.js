@@ -81,7 +81,7 @@ app.controller('TasksController', ['$scope', '$location', '$routeParams', '$sce'
             if($scope.taskData.folderName != curReview.folderName) { continue; }
 
             if(curReview.isPublished) {
-              $scope.curReviews.push(curReview);
+              $scope.doneReviews.push(curReview);
             }
 
             if(curReview.isMine) {
