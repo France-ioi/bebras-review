@@ -63,19 +63,25 @@ app.controller('TasksController', ['$scope', '$location', '$routeParams', '$sce'
   // For reviews
   $scope.hasReviews = {};
 
+  $scope.curReviews = [];
+
   $scope.select = function(newSel) {
     // Select a task
     $scope.reviewChanged();
     $scope.taskData = null;
     if(newSel) {
       $scope.sel = newSel;
+      $scope.curReviews = [];
       for(i=0; i < $scope.tasksList.length; i++) {
         if($scope.tasksList[i].folderName == newSel || $scope.tasksList[i].textID == newSel) {
           $scope.sel = $scope.tasksList[i].textID;
           $scope.taskData = $scope.tasksList[i];
           for(var i=0; i<$scope.reviewsList.length; i++) {
             var curReview = $scope.reviewsList[i];
-            if(curReview.isMine && $scope.taskData.folderName == curReview.folderName) {
+            if($scope.taskData.folderName != curReview.folderName) { continue; }
+
+            $scope.curReviews.push(curReview);
+            if(curReview.isMine) {
               $scope.taskData.currentRating = curReview.currentRating;
               $scope.taskData.potentialRating = curReview.potentialRating;
               $scope.taskData.itsInformatics = curReview.itsInformatics;

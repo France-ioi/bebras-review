@@ -29,24 +29,24 @@ header("location: login");
 	<script src="<?php echo base_url(); ?>assets/angular-toggle-switch.js"></script>
 
 	<!-- MY App -->
-	<script src="<?php echo base_url(); ?>app/routes.js.php?v=11"></script>
-	<script src="<?php echo base_url(); ?>app/packages/dirPagination.js?v=11"></script>
-	<script src="<?php echo base_url(); ?>app/packages/directive.js?v=11"></script>
+	<script src="<?php echo base_url(); ?>app/routes.js.php?v=12"></script>
+	<script src="<?php echo base_url(); ?>app/packages/dirPagination.js?v=12"></script>
+	<script src="<?php echo base_url(); ?>app/packages/directive.js?v=12"></script>
 	
 
-	<script src="<?php echo base_url(); ?>app/services/PresentationServices.js?v=11"></script>
-	<script src="<?php echo base_url(); ?>app/services/TasksServices.js?v=11"></script>
-	<script src="<?php echo base_url(); ?>app/services/ReviewsServices.js?v=11"></script>
-	<script src="<?php echo base_url(); ?>app/services/UsersServices.js?v=11"></script>
-	<script src="<?php echo base_url(); ?>app/services/ProfileServices.js?v=11"></script>
-	<script src="<?php echo base_url(); ?>app/helper/myHelper.js?v=11"></script>
+	<script src="<?php echo base_url(); ?>app/services/PresentationServices.js?v=12"></script>
+	<script src="<?php echo base_url(); ?>app/services/TasksServices.js?v=12"></script>
+	<script src="<?php echo base_url(); ?>app/services/ReviewsServices.js?v=12"></script>
+	<script src="<?php echo base_url(); ?>app/services/UsersServices.js?v=12"></script>
+	<script src="<?php echo base_url(); ?>app/services/ProfileServices.js?v=12"></script>
+	<script src="<?php echo base_url(); ?>app/helper/myHelper.js?v=12"></script>
 
 	<!-- App Controller -->
-	<script src="<?php echo base_url(); ?>app/controllers/PresentationController.js?v=11"></script>
-	<script src="<?php echo base_url(); ?>app/controllers/TasksController.js?v=11"></script>
-	<script src="<?php echo base_url(); ?>app/controllers/ReviewsController.js?v=11"></script>
-	<script src="<?php echo base_url(); ?>app/controllers/UsersController.js?v=11"></script>
-	<script src="<?php echo base_url(); ?>app/controllers/ProfileController.js?v=11"></script>
+	<script src="<?php echo base_url(); ?>app/controllers/PresentationController.js?v=12"></script>
+	<script src="<?php echo base_url(); ?>app/controllers/TasksController.js?v=12"></script>
+	<script src="<?php echo base_url(); ?>app/controllers/ReviewsController.js?v=12"></script>
+	<script src="<?php echo base_url(); ?>app/controllers/UsersController.js?v=12"></script>
+	<script src="<?php echo base_url(); ?>app/controllers/ProfileController.js?v=12"></script>
 
 	<style>
 		table {
