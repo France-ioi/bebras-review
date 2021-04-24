@@ -1,11 +1,11 @@
 <div style="border:1px solid;  height:85%; overflow-y: scroll;">
     <div style="border:1px solid;">
-        Number of reviews : {{curReviews.length}}<br>
+        Number of reviews : {{doneReviews.length}}<br>
         Average "as of now" rating : {{taskData.ar}}<br>
         Average "potential" rating : {{taskData.p}}
     </div>
  
-    <div ng-repeat="y in curReviews" ng-if="y.textID == sel && y.isPublished == 1" style="clear:both; border-radius: 5px; border:1px solid; margin:5px; padding:10px; height:300px">
+    <div ng-repeat="y in doneReviews" ng-if="y.textID == sel && y.isPublished == 1" style="clear:both; border-radius: 5px; border:1px solid; margin:5px; padding:10px; height:300px">
         <div class="bottom row">
             <div class="col-md-4">
                 <label style="width:90px">Review by:</label>
