@@ -28,11 +28,13 @@
 </div>
 <div ng-if="hasReviews[sel]" class="col-md-6">
     <br />
+    <label class="pull-left" style="width:200px;"> Review details: </label><br/>
+    <textarea class="pull-left"  style="clear:left; width:400px; height:150px;" ng-model="taskData.reviewComment" ng-change="reviewChanged()"></textarea>
     <label class="pull-left" style="width:200px;"> Your rating as of now: </label>
     <div star-rating rating-value="taskData.currentRating" ng-click="reviewChanged()"></div>
     <label class="pull-left" style="width:200px;"> Your rating of the potential: </label>
     <div star-rating rating-value="taskData.potentialRating" ng-click="reviewChanged()"></div>
-    <label class="pull-left" style="width:200px;"> The <i>It's informatics</i> section: </label>
+<!--    <label class="pull-left" style="width:200px;"> The <i>It's informatics</i> section: </label>
     <select ng-change="reviewChanged()" ng-model="taskData.itsInformatics">
       <option value="none" default>Not evaluated</option>
       <option value="great">Is great as it is now</option>
@@ -46,9 +48,7 @@
       <option value="good">The level is good</option>
       <option value="harder">The task looks harder than indicated</option>
       <option value="missing">Is missing</option>
-    </select>
-    <label class="pull-left" style="width:200px;"> Review details: </label><br/>
-    <textarea class="pull-left"  style="clear:left; width:400px; height:150px;" ng-model="taskData.reviewComment" ng-change="reviewChanged()"></textarea>
+    </select>-->
     <div ng-if="taskData.isPublished == 0" style="clear: both;">
       <i>This review has not yet been published.</i>
     </div>
