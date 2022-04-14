@@ -1,0 +1,1 @@
+ALTER TABLE `tasks` ADD `noAutoassign` TINYINT(1) NOT NULL DEFAULT '0';

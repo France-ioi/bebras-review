@@ -671,6 +671,7 @@ class presentation_model extends CI_Model {
         // Get all tasks data
         $tasks = [];
         foreach($this->db->get('tasks')->result_array() as $task) {
+            if($task['noAutoassign'] == '1') { continue; }
             $taskID = $task['ID'];
             $newTask = ['ID' => $taskID, 'folderName' => $task['folderName'], 'countryCode' => $task['countryCode']];
             $newTask['cantReview'] = [];
