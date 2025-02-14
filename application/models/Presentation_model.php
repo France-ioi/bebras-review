@@ -135,6 +135,7 @@ class presentation_model extends CI_Model {
 		for($i=0;$i<$reviews->num_rows();$i++)
 		{
 			$tasks = $this->db->get_where('tasks',array('ID'=>$result[$i]['taskID']))->result_array();
+            if(count($tasks) == 0) { continue; }
             $result[$i]['isMine'] = ($selfuser['ID'] == $result[$i]['userID']);
 			$result[$i]['folderName']=$tasks[0]['folderName'];
 			$result[$i]['textID']=$tasks[0]['textID'];
@@ -171,6 +172,7 @@ class presentation_model extends CI_Model {
 		for($i=0;$i<$reviews->num_rows();$i++)
 		{
 			$tasks = $this->db->get_where('tasks',array('ID'=>$result[$i]['taskID']))->result_array();
+            if(count($tasks) == 0) { continue; }
 			$result[$i]['folderName']=$tasks[0]['folderName'];
 			$result[$i]['year']=$tasks[0]['year'];
 			$result[$i]['countryCode']=$tasks[0]['countryCode'];
@@ -220,6 +222,7 @@ class presentation_model extends CI_Model {
 			$result[$i]['nbReviewsAssignedDone'] = 0;
 			$result[$i]['reviewIds'] = [];
 			foreach($this->db->get_where('reviews', ['userID' => $result[$i]['ID']])->result_array() as $review) {
+                if(!isset($taskIdToText[$review['taskID']])) { continue; }
 			    $result[$i]['reviewIds'][] = $taskIdToText[$review['taskID']];
                 $done = $review['isPublished'] == 1;
                 $assigned = $review['isAssigned'] == 1;
@@ -973,8 +976,8 @@ class presentation_model extends CI_Model {
                     $fileContents .= "Non-assigned review\n";
                 }
 
-                $fileContents .= "Rating as is: " . $review['currentRating'] . "/6\n";
-                $fileContents .= "Potential: " . $review['potentialRating'] . "/6\n";
+                //$fileContents .= "Rating as is: " . $review['currentRating'] . "/6\n";
+                //$fileContents .= "Potential: " . $review['potentialRating'] . "/6\n";
                 if($review['itsInformatics'] == 'great') {
                     $fileContents .= "It's informatics section: Great as it is now\n";
                 } elseif($review['itsInformatics'] == 'canImprove') {

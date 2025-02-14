@@ -38,7 +38,7 @@
       <i class="fa fa-fw fa-sort-asc" ng-if="myOrderBy=='Reviews'"></i>
       <i class="fa fa-fw fa-sort-desc" ng-if="myOrderBy=='-Reviews'"></i></th>
 
-      <th ng-click="myOrderBy=((myOrderBy=='ar')?'-ar':'ar')">As of now
+<!--      <th ng-click="myOrderBy=((myOrderBy=='ar')?'-ar':'ar')">As of now
       <i class="fa fa-fw fa-sort" ng-if="myOrderBy!='ar'&&myOrderBy!='-ar'"></i>
       <i class="fa fa-fw fa-sort-asc" ng-if="myOrderBy=='ar'"></i>
       <i class="fa fa-fw fa-sort-desc" ng-if="myOrderBy=='-ar'"></i></th>
@@ -46,7 +46,7 @@
       <th ng-click="myOrderBy=((myOrderBy=='p')?'-p':'p')">Potential
       <i class="fa fa-fw fa-sort" ng-if="myOrderBy!='p'&&myOrderBy!='-p'"></i>
       <i class="fa fa-fw fa-sort-asc" ng-if="myOrderBy=='p'"></i>
-      <i class="fa fa-fw fa-sort-desc" ng-if="myOrderBy=='-p'"></i></th>
+      <i class="fa fa-fw fa-sort-desc" ng-if="myOrderBy=='-p'"></i></th>-->
     </tr>
   </thead>
   <tbody>
@@ -59,8 +59,8 @@
       <td> {{x.importDate}} </td>
       <td> {{x.status}} </td>
       <td> {{x.nbReviewsDone}} / {{x.nbReviewsAssigned}} </td>
-      <td> {{x.ar}} </td>
-      <td> {{x.p}} </td>
+<!--      <td> {{x.ar}} </td>
+      <td> {{x.p}} </td>-->
     </tr>
   </tbody>
 </table>

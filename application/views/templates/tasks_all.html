@@ -1,8 +1,9 @@
 <div style="border:1px solid;  height:85%; overflow-y: scroll;">
     <div style="border:1px solid;">
-        Number of reviews : {{doneReviews.length}}<br>
+        Number of reviews : {{doneReviews.length}}
+        <!--<br>
         Average "as of now" rating : {{taskData.ar}}<br>
-        Average "potential" rating : {{taskData.p}}
+        Average "potential" rating : {{taskData.p}}-->
     </div>
  
     <div ng-repeat="y in doneReviews" ng-if="y.textID == sel && y.isPublished == 1" style="clear:both; border-radius: 5px; border:1px solid; margin:5px; padding:10px; height:300px">
@@ -13,9 +14,9 @@
                 <label style="width:90px">Review date:</label>
                 <label style="width:80px">{{y.initialReviewDate}} </label><br/>
                 <label style="width:90px">As of now:</label>
-                <div star-rating rating-value="y.currentRating" rating-readonly="true" style="display:inline;"></div>
+<!--                <div star-rating rating-value="y.currentRating" rating-readonly="true" style="display:inline;"></div>
                 <label style="width:90px">Potential:</label>
-                <div star-rating rating-value="y.potentialRating" rating-readonly="true" style="display:inline;"></div>
+                <div star-rating rating-value="y.potentialRating" rating-readonly="true" style="display:inline;"></div>-->
                 <label ng-show="y.itsInformatics != 'none'">It's informatics section:</label>
                 <span ng-show="y.itsInformatics == 'great'">Great as it is now</span>
                 <span ng-show="y.itsInformatics == 'canImprove'">Can be improved</span>

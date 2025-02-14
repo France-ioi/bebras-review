@@ -31,8 +31,8 @@
         <option value="author">Author</option>
         <option value="taskID">Task ID</option>
         <option value="lastChangeReviewDate">Date</option>
-        <option value="-currentRating">As of Now</option>
-        <option value="-potentialRating">Potential</option>
+<!--        <option value="-currentRating">As of Now</option>
+        <option value="-potentialRating">Potential</option>-->
     </select>
     <div ng-if="isAdmin" class="well">
         <button class="btn btn-default" ng-click="autoassign()">Auto-assign reviews</button>
@@ -55,11 +55,11 @@
                 <label style="width:80px">{{x.initialReviewDate}} </label><br/>
                 <label style="width:90px">Last change:</label>
                 <label style="width:80px">{{x.lastChangeReviewDate}}</label> <br/>
-                <label style="width:80px">As of now:</label>
+<!--                <label style="width:80px">As of now:</label>
                 <div star-rating rating-value="x.currentRating" rating-readonly="true" style="float:right; line-height: 1.2;"></div>
                 <br/>
                 <label style="width:80px">Potential:</label>
-                <div star-rating rating-value="x.potentialRating" rating-readonly="true" style="float:right; line-height: 1.2;"></div>
+                <div star-rating rating-value="x.potentialRating" rating-readonly="true" style="float:right; line-height: 1.2;"></div>-->
                 <label ng-show="x.itsInformatics != 'none'">It's informatics section:</label>
                 <span ng-show="x.itsInformatics == 'great'">Great as it is now</span>
                 <span ng-show="x.itsInformatics == 'canImprove'">Can be improved</span>
