@@ -1,6 +1,6 @@
 <div style="border:1px solid;  height:85%; overflow-y: scroll;">
     <div style="border:1px solid;">
-        Number of reviews : {{doneReviews.length}}
+        Published reviews : {{(doneReviews | filter:{isPublished: 1}).length}}
         <!--<br>
         Average "as of now" rating : {{taskData.ar}}<br>
         Average "potential" rating : {{taskData.p}}-->
