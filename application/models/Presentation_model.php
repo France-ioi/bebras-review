@@ -1261,6 +1261,7 @@ class presentation_model extends CI_Model {
         'VU' => 'Vanuatu',
         'WF' => 'Wallis And Futuna',
         'WS' => 'Samoa',
+        'XK' => 'Kosovo',
         'YE' => 'Yemen',
         'YT' => 'Mayotte',
         'ZA' => 'South Africa',
